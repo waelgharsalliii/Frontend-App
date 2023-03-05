@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Register.css"
 
 
@@ -120,7 +120,9 @@ const Register = () => {
       </form>
       <div className="Login">
       <div>Already have an account?</div>
+      <NavLink to="/Login">
       <button className="btn btn-primary">Login here</button>
+      </NavLink>
       </div>
     </div>
   );

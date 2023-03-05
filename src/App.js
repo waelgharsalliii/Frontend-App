@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import { Route, Routes } from 'react-router-dom';
 import Register from './SignUp/Register';
 import Login from './SignIn/Login';
+import Profile from './Profile/Profile';
 
 
 
@@ -37,6 +38,7 @@ function App() {
           <Routes>
             <Route  path="/Register"  element={<Register/>}/>
             <Route path="/Login"  element={<Login />}></Route>
+            <Route path="/Profile/:Token" element={<Profile/>}></Route>
           </Routes>
           <About/>
           <New></New>
