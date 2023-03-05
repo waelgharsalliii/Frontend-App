@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const NavBar = () => {
   return (
@@ -64,12 +65,11 @@ const NavBar = () => {
           >
             <i className="fa fa-search"></i>
           </button>
-          <a
-            href="https://htmlcodex.com/startup-company-website-template"
+          <NavLink    to="/Register"
             className="btn btn-secondary text-light rounded-pill py-2 px-4 ms-3"
           >
            Sign Up
-          </a>
+          </NavLink>
         </div>
       </nav>
 
@@ -91,12 +91,12 @@ const NavBar = () => {
               >
                Join Us Now
               </a>
-              <a
-                href=""
+              <NavLink
+                to="/Login"
                 className="btn btn-outline-light py-sm-3 px-sm-5 rounded-pill animated slideInRight"
               >
                 Sign In
-              </a>
+              </NavLink>
             </div>
             <div className="col-lg-6 text-center text-lg-start">
               <img className="img-fluid" src="img/hero.png" alt="" />
