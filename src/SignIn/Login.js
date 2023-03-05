@@ -1,38 +1,50 @@
 import React, { useState } from "react";
+import "../styles/Register.css"
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const [password, setPass] = useState("");
 
   const handleSubmit = (e) => e.preventDefault();
-  console.log(email);
 
   return (
-    <div className="auth-form-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <label htmlFor="email">Email</label>
+    <div className="Container">
+      <div className="title">Login</div>
+      <br />
+      <form  onSubmit={handleSubmit}>
+        <div className="user-details">
+        <div className="input-box"> 
+        <label className="details">Email</label>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
-          placeholder="youremail@gmail.com"
+          placeholder="email@gmail.com"
           id="email"
           name="email"
+          required
         />
-
-        <label htmlFor="password">Password</label>
+        </div>
+        <div className="input-box"> 
+        <label className="details">Password</label>
         <input
-          value={pass}
+          value={password}
           onChange={(e) => setPass(e.target.value)}
           type="password"
           placeholder="***********"
           id="password"
           name="password"
+          required
         />
-
-        <button type="submit">Login</button>
+        </div>
+        </div>
+        <button type="submit" className="btn btn-info">Login</button>
       </form>
-      <button>Don't have an account .Register here .</button>
+      <div className="Login">
+      <div>Don't have an account</div>
+      <button className="btn btn-primary">Register here</button>
+      </div>
     </div>
   );
 };
