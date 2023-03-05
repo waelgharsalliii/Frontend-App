@@ -9,10 +9,30 @@ import Portfolio from './components/Portfolio';
 import Testimonial from './components/Testimonial';
 import Team from './components/Team';
 import Footer from './components/Footer';
-
+import Registre from './SignUp/Registre';
+import { BrowserRouter,createBrowserRouter,RouterProvider } from 'react-router-dom';
+import { ReactDOM } from 'react';
+import Login from './SignIn';
 function App() {
   // Use state to track when the page has loaded
+  const root =ReactDOM.createRoot(document.getElementById('root'));
+  root.render()
   const [loaded, setLoaded] = useState(false);
+  const [currentForm,setCurrentForm]=useState('register');
+  const toggleForm=(formName)=>{
+    setCurrentForm(formName);
+  }
+  const router=createBrowserRouter([
+    {
+      path:'/registre',
+      element:<Registre></Registre>
+    },
+    {
+      path:'/login',
+      element:<Login></Login>
+    }
+  ])
+  
 
   // Wait for the page to load, then set loaded to true
   useEffect(() => {

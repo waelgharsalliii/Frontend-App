@@ -68,7 +68,7 @@ const NavBar = () => {
             href="https://htmlcodex.com/startup-company-website-template"
             className="btn btn-secondary text-light rounded-pill py-2 px-4 ms-3"
           >
-            Pro 
+           Sign Up
           </a>
         </div>
       </nav>
@@ -89,13 +89,13 @@ const NavBar = () => {
                 href=""
                 className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInLeft"
               >
-                Free Quote
+               Join Us Now
               </a>
               <a
                 href=""
                 className="btn btn-outline-light py-sm-3 px-sm-5 rounded-pill animated slideInRight"
               >
-                Contact Us
+                Sign In
               </a>
             </div>
             <div className="col-lg-6 text-center text-lg-start">
