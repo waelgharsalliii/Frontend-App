@@ -40,7 +40,7 @@ const Register = () => {
           toast.success("registered successfully", {
             duration: 3000,
           });
-          setTimeout(() => navigate("/Login"), 5000);
+          setTimeout(() => navigate("/Login"), 3000);
         })
         .catch((error) => {
           console.error(error);

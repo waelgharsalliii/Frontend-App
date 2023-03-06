@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +19,10 @@ const Login = () => {
     console.log(data);
     if (response.ok) {
       localStorage.setItem("token", data.token);
+      toast.success("Login successfully", {
+        duration: 2000,
+      });
+      setTimeout(()=>navigate("/Profile"),3000);
       navigate("/Profile");
     } else {
       console.error("error");
@@ -53,6 +58,7 @@ const Login = () => {
               name="password"
               required
             />
+              <a style={{position:"relative",top:"20px"}} href="">Forgot password ?</a>
           </div>
         </div>
         <button type="submit" className="btn btn-info">
