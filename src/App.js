@@ -37,8 +37,8 @@ function App() {
           <NavBar />
           <Routes>
             <Route  path="/Register"  element={<Register/>}/>
-            <Route path="/Login"  element={<Login />}></Route>
-            <Route path="/Profile/:Token" element={<Profile/>}></Route>
+            <Route path="/Login"  element={<Login />} />
+            <Route path="/Profile" element={<Profile/>} />
           </Routes>
           <About/>
           <New></New>

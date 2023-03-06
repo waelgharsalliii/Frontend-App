@@ -4,40 +4,25 @@ import "../styles/Register.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [password, setPass] = useState("");
-  const navigate=useNavigate();
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch("http://localhost:3001/users/signin", {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const response = await fetch("http://localhost:3001/users/signin", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-         email, password
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Invalid email or password");
-        }
-      })
-      .then((data) => {
-        console.log(data);
-        navigate("/Profile/"+`${data}`);  // { token: 'jwt_token' }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await response.json();
+    console.log(data);
+    if (response.ok) {
+      localStorage.setItem("token", data.token);
+      navigate("/Profile");
+    } else {
+      console.error("error");
+    }
   };
-
-
-
-
-  
 
   return (
     <div className="Container">
@@ -61,7 +46,7 @@ const Login = () => {
             <label className="details">Password</label>
             <input
               value={password}
-              onChange={(e) => setPass(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               type="password"
               placeholder="***********"
               id="password"
@@ -77,7 +62,7 @@ const Login = () => {
       <div className="Login">
         <div>Don't have an account</div>
         <NavLink to="/Register">
-        <button className="btn btn-primary">Register here</button>
+          <button className="btn btn-primary">Register here</button>
         </NavLink>
       </div>
     </div>
