@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import "../styles/Register.css";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
 
 
@@ -29,13 +30,29 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then((response) => response.json())
-          .then((data) => setUser(data))
+          .then((data) => {
+            setUser(data);
+          }
+            )
           .catch((error) => console.error(error));
       } catch (error) {
         console.error(error);
       }
     }
   }, []);
+
+
+
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email);
+      setFname(user.fname);
+      setLname(user.lname);
+      setPass(user.password);
+      setPhone(user.phone);
+      setBirthdate(new Date(user.birthdate))
+    }
+  }, [user]);
 
 
 
@@ -64,13 +81,17 @@ const Profile = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email,
-            password,
             fname,
             lname,
-            birthdate,
+            email,
+            password,
             phone,
+            birthdate
           }),
+        });
+        console.log(email);
+        toast('Good Job!', {
+          icon: '👏',
         });
       } catch (error) {
         console.error(error);
@@ -82,6 +103,7 @@ const Profile = () => {
     <div>
       {user ? (
         <div className="Container">
+          <Toaster position="top-center" reverseOrder={false} />
           <div className="title">Profile</div>
           <h2 className="detail">You can update the details</h2>
           <div className="user-details">
@@ -89,7 +111,7 @@ const Profile = () => {
               <label>First Name</label>
               <input
                 type="text"
-                value={user.fname}
+                value={fname}
                 onChange={(e) => setFname(e.target.value)}
               />
             </div>
@@ -97,15 +119,15 @@ const Profile = () => {
               <label>Last Name</label>
               <input
                 type="text"
-                value={user.lname}
+                value={lname}
                 onChange={(e) => setLname(e.target.value)}
               />
             </div>
             <div className="input-box">
               <label>Email</label>
               <input
-                type="text"
-                value={user.email}
+                type="email"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
@@ -113,15 +135,15 @@ const Profile = () => {
               <label>Password</label>
               <input
                 type="password"
-                value={user.password}
+                value={password}
                 onChange={(e) => setPass(e.target.value)}
               />
             </div>
             <div className="input-box">
               <label>Phone</label>
               <input
-                type="text"
-                value={user.phone}
+                type="number"
+                value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
@@ -129,7 +151,7 @@ const Profile = () => {
               <label>Birthdate</label>
               <input
                 type="date"
-                value={user.birthdate}
+                value={birthdate}
                 onChange={(e) => setBirthdate(e.target.value)}
               />
             </div>
