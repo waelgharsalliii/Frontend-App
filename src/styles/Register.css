@@ -7,7 +7,6 @@
     border-radius: 5px;
     margin:auto;
     overflow: hidden;
-    z-index: 1;
 }
 
 .Container::before {
@@ -20,7 +19,7 @@
     background: linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15) 75%, transparent 75%, transparent);
     background-size: 50px 50px;
     animation: rotate 2s linear infinite;
-    z-index: -1;
+    transform-origin: bottom right;
 }
 
 @keyframes rotate {

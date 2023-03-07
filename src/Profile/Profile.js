@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import "../styles/Register.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+
 
 
 const Profile = () => {
+  const navigate=useNavigate();
   const [user, setUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
@@ -12,10 +15,10 @@ const Profile = () => {
   const [lname, setLname] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [phone, setPhone] = useState("");
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(token);
     if (token) {
       try {
         const decoded = jwt_decode(token);
@@ -33,6 +36,18 @@ const Profile = () => {
       }
     }
   }, []);
+
+
+
+  const LogoutHandler=()=> {
+    localStorage.removeItem('token');
+    localStorage.removeItem('isLoggedIn');
+    navigate('/login');
+  }
+
+
+
+
 
   const UpdateUser = async (event) => {
     event.preventDefault();
@@ -124,7 +139,7 @@ const Profile = () => {
             Edit Profile
           </button>
           <NavLink to="/Login">
-          <button className="btn btn-danger"  style={{position:"relative",left:"200px"}}>Logout</button>
+          <button className="btn btn-danger"  style={{position:"relative",left:"200px"}}   onClick={LogoutHandler}>Logout</button>
           </NavLink>
         </div>
       ) : (

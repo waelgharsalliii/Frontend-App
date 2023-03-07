@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -19,10 +25,14 @@ const Login = () => {
     console.log(data);
     if (response.ok) {
       localStorage.setItem("token", data.token);
-      navigate("/Profile");
-      setTimeout(toast.success("Login successfully", {
-        duration: 3000,
-      }),3000)
+      localStorage.setItem('isLoggedIn', 'true');
+      const isLoggedIn=localStorage.getItem("isLoggedIn")
+      if (isLoggedIn==='true') {
+        toast.success("Login successfully",{
+          duration:8000
+        })
+      }
+      setTimeout(()=> navigate("/Profile"),3000);
     } else {
       toast.error("Login failed",{
         duration:2000
@@ -32,12 +42,13 @@ const Login = () => {
 
   return (
     <div className="Container">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="title">Login</div>
       <br />
       <form onSubmit={handleSubmit}>
         <div className="user-details">
           <div className="input-box">
-            <label className="details">Email</label>
+            <label className="details">Email<ion-icon name="mail-outline"></ion-icon></label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -53,12 +64,29 @@ const Login = () => {
             <input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              type="password"
               placeholder="***********"
               id="password"
               name="password"
+              type={passwordVisible ? "text" : "password"}
               required
             />
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={togglePasswordVisibility}
+              style={{
+                position: "absolute",
+                top: "40%",
+                right: "30px",
+                transform: "translateY(-10%)",
+              }}
+            >
+              {passwordVisible ? (
+                <i className="bi bi-eye-fill"></i>
+              ) : (
+                <i className="bi bi-eye-slash-fill"></i>
+              )}
+            </button>
               <a style={{position:"relative",top:"20px",textDecoration:"underline"}} href="">Forgot password ?</a>
           </div>
         </div>
