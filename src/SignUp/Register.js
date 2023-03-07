@@ -4,6 +4,7 @@ import "../styles/Register.css";
 import toast, { Toaster } from "react-hot-toast";
 
 const Register = () => {
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
   const [fname, setFname] = useState("");
@@ -11,6 +12,10 @@ const Register = () => {
   const [birthdate, setBirthdate] = useState("");
   const [phone, setPhone] = useState("");
   const navigate = useNavigate();
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -101,7 +106,7 @@ const Register = () => {
             />
           </div>
           <div className="input-box">
-            <label className="details">Email</label>
+            <label className="details">Email<ion-icon name="mail-outline"></ion-icon></label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -112,16 +117,33 @@ const Register = () => {
             />
           </div>
 
-          <div className="input-box">
+          <div className="input-box" style={{ position: "relative" }}>
             <label className="details">Password</label>
             <input
               value={password}
               onChange={(e) => setPass(e.target.value)}
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               placeholder="***********"
               id="password"
               name="password"
             />
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={togglePasswordVisibility}
+              style={{
+                position: "absolute",
+                top: "70%",
+                right: "2px",
+                transform: "translateY(-50%)",
+              }}
+            >
+              {passwordVisible ? (
+                <i className="bi bi-eye-fill"></i>
+              ) : (
+                <i className="bi bi-eye-slash-fill"></i>
+              )}
+            </button>
           </div>
         </div>
         <button type="submit" className="btn btn-info">

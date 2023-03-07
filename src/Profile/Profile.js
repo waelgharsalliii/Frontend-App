@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import "../styles/Register.css";
+import { NavLink } from "react-router-dom";
 
 
 const Profile = () => {
@@ -122,7 +123,9 @@ const Profile = () => {
           <button className="btn btn-info" onClick={UpdateUser}>
             Edit Profile
           </button>
+          <NavLink to="/Login">
           <button className="btn btn-danger"  style={{position:"relative",left:"200px"}}>Logout</button>
+          </NavLink>
         </div>
       ) : (
         <p>Loading...</p>

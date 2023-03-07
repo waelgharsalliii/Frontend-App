@@ -1,11 +1,37 @@
 .Container {
+    position: relative;
     max-width:700px;
     width:100%;  
-    background-color: #fff; 
+    background-color:#E8F5E9; 
     padding: 25px 30px;
     border-radius: 5px;
     margin:auto;
+    overflow: hidden;
+    z-index: 1;
 }
+
+.Container::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(255,255,255,0.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.15) 75%, transparent 75%, transparent);
+    background-size: 50px 50px;
+    animation: rotate 2s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 
 .Container .title {
     font-size:25px;
@@ -36,6 +62,12 @@ form  .user-details .input-box {
     width: calc(100%/2-20px);
 }
 
+form  .user-details .input-box ion-icon {
+    position: relative;
+    left: 130px;
+    top: 40px;
+}
+
 .user-details .input-box .details {
     display: block;
     font-weight:500 ;
@@ -44,7 +76,7 @@ form  .user-details .input-box {
 
 
 .user-details .input-box input {
-height: 45px;
+height: 44px;
 width: 100%;
 outline: none;
 border-radius: 5px;
@@ -53,11 +85,14 @@ padding-left:15px;
 font-size: 16px;
 border-bottom-width: 2px;
 transition:all 0.3s ease ;
+cursor: pointer;
 }
 
 .user-details .input-box input::valid  {
 border-color: #9b59b6;
 }
+
+
 
 
 .btn-info {
@@ -89,6 +124,7 @@ border-color: #9b59b6;
 
 .btn-primary:hover {
 background:#71b7e6;
+color:black;
 border:none;
 }
 
@@ -118,4 +154,9 @@ border:none;
 background: salmon;
 border: none;
 border-radius: 10px;
+}
+
+
+.btn-outline-secondary {
+    border-style: none;
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+
 const NavBar = () => {
   return (
     <div className="container-xxl position-relative p-0">
@@ -72,19 +73,18 @@ const NavBar = () => {
           </NavLink>
         </div>
       </nav>
-
       <div className="container-xxl py-5 bg-primary hero-header mb-5">
         <div className="container my-5 py-5 px-lg-5">
           <div className="row g-5 py-5">
             <div className="col-lg-6 text-center text-lg-start">
-              <h1 className="text-white mb-4 animated zoomIn">
+              {/* <h1 className="text-white mb-4 animated zoomIn">
                 All in one SEO tool need to grow your business rapidly
               </h1>
               <p className="text-white pb-3 animated zoomIn">
                 Tempor rebum no at dolore lorem clita rebum rebum ipsum rebum
                 stet dolor sed justo kasd. Ut dolor sed magna dolor sea diam.
                 Sit diam sit justo amet ipsum vero ipsum clita lorem
-              </p>
+              </p> */}
               <a
                 href=""
                 className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInLeft"
@@ -99,14 +99,11 @@ const NavBar = () => {
               </NavLink>
             </div>
             <div className="col-lg-6 text-center text-lg-start">
-              <img className="img-fluid" src="img/hero.png" alt="" />
+              <img className="img-fluid" src="" alt="" />
             </div>
           </div>
         </div>
       </div>
-
-
-
       <div className="modal fade" id="searchModal" tabIndex="-1">
             <div className="modal-dialog modal-fullscreen">
                 <div className="modal-content" style={{backgroundColor: "rgba(29, 29, 39, 0.7)"}}>
@@ -122,8 +119,6 @@ const NavBar = () => {
                 </div>
             </div>
         </div>
-
-
     </div>
   );
 };

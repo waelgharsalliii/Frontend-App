@@ -40,12 +40,12 @@ function App() {
             <Route path="/Login"  element={<Login />} />
             <Route path="/Profile" element={<Profile/>} />
           </Routes>
-          <About/>
-          <New></New>
-          <Service></Service>
-          <Portfolio></Portfolio>
+          {/* <About/> */}
+          {/* <New></New> */}
+          {/* <Service></Service> */}
+          {/* <Portfolio></Portfolio>
           <Testimonial></Testimonial>
-          <Team></Team>
+          <Team></Team> */}
           <Footer></Footer>
         </>
       ) : ( 

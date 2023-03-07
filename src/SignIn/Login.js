@@ -19,13 +19,14 @@ const Login = () => {
     console.log(data);
     if (response.ok) {
       localStorage.setItem("token", data.token);
-      toast.success("Login successfully", {
-        duration: 2000,
-      });
-      setTimeout(()=>navigate("/Profile"),3000);
       navigate("/Profile");
+      setTimeout(toast.success("Login successfully", {
+        duration: 3000,
+      }),3000)
     } else {
-      console.error("error");
+      toast.error("Login failed",{
+        duration:2000
+      })
     }
   };
 
@@ -58,7 +59,7 @@ const Login = () => {
               name="password"
               required
             />
-              <a style={{position:"relative",top:"20px"}} href="">Forgot password ?</a>
+              <a style={{position:"relative",top:"20px",textDecoration:"underline"}} href="">Forgot password ?</a>
           </div>
         </div>
         <button type="submit" className="btn btn-info">
@@ -66,7 +67,7 @@ const Login = () => {
         </button>
       </form>
       <div className="Login">
-        <div>Don't have an account</div>
+        <div style={{textDecoration:"underline"}}>Don't have an account</div>
         <NavLink to="/Register">
           <button className="btn btn-primary">Register here</button>
         </NavLink>
