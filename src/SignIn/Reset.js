@@ -4,18 +4,19 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 
 const Reset = () => {
-  const [old, setOld] = useState("");
-  const [newP, setnewP] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setnewPassword] = useState("");
   const navigate=useNavigate();
 
   const handleChange = async (event) => {
     event.preventDefault();
     const Id = localStorage.getItem("Id");
     console.log(Id);
-    fetch(`http://localhost:3001/users/${Id}`, {
+    console.log(oldPassword);
+    await fetch(`http://localhost:3001/users/${Id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ old, newP }),
+      body: JSON.stringify({ oldPassword, newPassword }),
     })
       .then((response) => {
         if (response.ok) {
@@ -47,20 +48,20 @@ const Reset = () => {
           <div className="input-box">
             <label className="details">Old Password</label>
             <input
-              value={old}
+              value={oldPassword}
               placeholder="Old Password"
               type="password"
-              onChange={(e) => setOld(e.target.value)}
+              onChange={(e) => setOldPassword(e.target.value)}
             />
           </div>
 
           <div className="input-box">
             <label className="details">New Password</label>
             <input
-              value={newP}
+              value={newPassword}
               placeholder="New Password"
               type="password"
-              onChange={(e) => setnewP(e.target.value)}
+              onChange={(e) => setnewPassword(e.target.value)}
             />
           </div>
         </div>
