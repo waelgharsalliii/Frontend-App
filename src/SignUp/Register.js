@@ -42,9 +42,7 @@ const Register = () => {
         }),
       })
         .then((data) => {
-          toast.success("registered successfully", {
-            duration: 3000,
-          });
+          toast.success("registered successfully");
           setTimeout(() => navigate("/Login"), 3000);
         })
         .catch((error) => {

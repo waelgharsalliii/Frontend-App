@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 
 
 const Reset = () => {
+
+    const navigate=useNavigate();
 
 
     const RetrievePassword=async (e) => {
@@ -12,10 +16,17 @@ const Reset = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email }),
           });
+        toast("Please check your email");  
+        setTimeout(() => navigate("/Login"), 3000);
+    }
+
+    const CancelRetrieve=(e)=> {
+        e.preventDefault();
+        navigate("/Login");
     }
 
 
-    const [email,setEmail]=useState();
+    const [email,setEmail]=useState("");
 
   return (
     <div className="Container">
@@ -37,6 +48,7 @@ const Reset = () => {
           </div>
           </div>
           <button className="btn btn-success" onClick={RetrievePassword}>Retrieve Password</button>
+          <button onClick={CancelRetrieve} className="btn btn-danger">Cancel</button>
           </form>
           </div>
   )

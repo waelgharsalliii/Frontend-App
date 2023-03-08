@@ -1,17 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import "../styles/Register.css";
 
 
 const NavBar = () => {
   return (
     <div className="container-xxl position-relative p-0">
      <nav id="navbar" className="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-3 py-lg-0">
-        <a href="" className="navbar-brand p-0">
-          <h1 className="m-0">
-            <i className="fa fa-search me-2"></i>Catch
-            <span className="fs-5">App</span>
-          </h1>
-        </a>
+        <div  className="navbar-brand">
+          <img src="img/logo.png" alt="logo"  className="navbar-logo" />
+        </div>
         <button
           className="navbar-toggler"
           type="button"

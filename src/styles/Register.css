@@ -188,3 +188,17 @@ height: 30px;
 .google {
     border: none;
 }
+
+.navbar-brand {
+    width: 200px; 
+  }
+  
+  .navbar-logo {
+    max-width: 100%;
+    width:200px;
+    height: auto;
+  }
+  
+  .btn-success {
+    margin-right: 20px;
+  }
