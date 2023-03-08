@@ -15,29 +15,41 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await fetch("http://localhost:3001/users/signin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    let userFound = null;
+    const response = await fetch(`http://localhost:3001/users`);
     const data = await response.json();
     console.log(data);
-    if (response.ok) {
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("isLoggedIn", "true");
-      const isLoggedIn = localStorage.getItem("isLoggedIn");
-      if (isLoggedIn === "true") {
-        toast("Login successfully !", {
-          icon: "😁",
+    userFound = data.find((user) => user.email === email);
+    console.log(userFound);
+    if (userFound.isAdmin) {
+      navigate("/users");
+      return;
+    } else {
+      const response = await fetch("http://localhost:3001/users/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("isLoggedIn", "true");
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        if (isLoggedIn === "true") {
+          toast("Login successfully !", {
+            icon: "😁",
+          });
+        }
+        setTimeout(() => navigate("/Profile"), 3000);
+      } else {
+        toast("Login failed !", {
+          icon: "😢",
         });
       }
-      setTimeout(() => navigate("/Profile"), 3000);
-    } else {
-      toast("Login failed !", {
-        icon: "😢",
-      });
     }
   };
+  
 
   const handlePass = async (event) => {
     if (email==="") {

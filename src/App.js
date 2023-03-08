@@ -14,6 +14,7 @@ import Register from './SignUp/Register';
 import Login from './SignIn/Login';
 import Profile from './Profile/Profile';
 import Reset from './SignIn/Reset';
+import Users from './SignIn/Users';
 
 
 
@@ -41,6 +42,7 @@ function App() {
             <Route path="/Login"  element={<Login />} />
             <Route path="/Profile" element={<Profile/>} />
             <Route path="/Reset" element={<Reset/>}></Route>
+            <Route path="/users" element={<Users/>}></Route>
           </Routes>
           {/* <About/> */}
           {/* <New></New> */}
