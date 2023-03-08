@@ -20,6 +20,7 @@ const Users = () => {
     <div>
       {data.map((user, index) => (
         <User
+        id={user._id}
           key={index}
           fname={user.fname}
           lname={user.lname}
