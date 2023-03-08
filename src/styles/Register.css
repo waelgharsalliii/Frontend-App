@@ -104,6 +104,7 @@ border-color: #9b59b6;
     letter-spacing: 1px;
     border-radius: 5px;
     background: linear-gradient(135deg,#71b7e6,#9b59b6);
+    margin-right:20px;
 }
 
 .btn-info:hover {
@@ -176,4 +177,14 @@ border-radius: 10px;
 .cancel {
     position: relative;
     left:200px;
+}
+
+.Loading {
+margin:auto;
+color:3px solid black;
+height: 30px;
+}
+
+.google {
+    border: none;
 }

@@ -20,62 +20,46 @@ const Login = () => {
     const data = await response.json();
     console.log(data);
     userFound = data.find((user) => user.email === email);
-    console.log(userFound);
-    if (userFound.isAdmin) {
-      navigate("/users");
-      return;
-    } else {
-      const response = await fetch("http://localhost:3001/users/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      console.log(data);
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("isLoggedIn", "true");
-        const isLoggedIn = localStorage.getItem("isLoggedIn");
-        if (isLoggedIn === "true") {
-          toast("Login successfully !", {
-            icon: "😁",
+    if (userFound) {
+      localStorage.setItem("Id",userFound._id);
+      if (userFound.isAdmin == true) {
+        navigate("/users");
+        return;
+      } else {
+        const response = await fetch("http://localhost:3001/users/signin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("isLoggedIn", "true");
+          const isLoggedIn = localStorage.getItem("isLoggedIn");
+          if (isLoggedIn === "true") {
+            toast("Login successfully !", {
+              icon: "😁",
+            });
+          }
+          setTimeout(() => navigate("/Profile"), 3000);
+        } else {
+          toast("Login failed !", {
+            icon: "😢",
           });
         }
-        setTimeout(() => navigate("/Profile"), 3000);
-      } else {
-        toast("Login failed !", {
-          icon: "😢",
-        });
       }
-    }
-  };
-  
-
-  const handlePass = async (event) => {
-    if (email==="") {
-      toast.error("Please type your email",{
-        duration:3000
-      });
-      event.preventDefault();
     }
     else {
-      event.preventDefault();
-    fetch(`http://localhost:3001/users`)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        const userFound = data.find((user) => user.email === email);
-      if (userFound ) {
-        const userId = userFound._id;
-        console.log(userId);
-        console.log(userFound.password)
-        localStorage.setItem("Id", userId);
-      }
+      toast.error("Please check your email or password",{
+        duration:3000
       })
-      .catch((error) => console.error(error));
-    navigate("/Reset");
     }
   };
+
+  const ResetPass =(e)=> {
+    e.preventDefault();
+    navigate("/Reset");
+  }
 
   return (
     <div className="Container">
@@ -133,7 +117,7 @@ const Login = () => {
                 textDecoration: "underline",
               }}
               href=""
-              onClick={handlePass}
+              onClick={ResetPass}
             >
               Forgot password ?
             </a>
@@ -142,6 +126,8 @@ const Login = () => {
         <button type="submit" className="btn btn-info">
           Login
         </button>
+        <ion-icon name="log-out-outline"></ion-icon>
+        <button className="google"><ion-icon name="logo-google"></ion-icon></button>
       </form>
       <div className="Login">
         <div style={{ textDecoration: "underline" }}>Don't have an account</div>
