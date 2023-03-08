@@ -40,7 +40,14 @@ const Login = () => {
   };
 
   const handlePass = async (event) => {
-    event.preventDefault();
+    if (email==="") {
+      toast.error("Please type your email",{
+        duration:3000
+      });
+      event.preventDefault();
+    }
+    else {
+      event.preventDefault();
     fetch(`http://localhost:3001/users`)
       .then((response) => response.json())
       .then((data) => {
@@ -55,6 +62,7 @@ const Login = () => {
       })
       .catch((error) => console.error(error));
     navigate("/Reset");
+    }
   };
 
   return (

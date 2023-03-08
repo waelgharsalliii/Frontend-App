@@ -23,6 +23,7 @@ const Reset = () => {
             toast.success("Password updated successfully"); 
             localStorage.removeItem('Id');
             response.json();
+            setTimeout(() => navigate("/Login"), 3000);
         } 
         else {
             toast.error("Error");
