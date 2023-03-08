@@ -9,7 +9,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -25,19 +24,37 @@ const Login = () => {
     console.log(data);
     if (response.ok) {
       localStorage.setItem("token", data.token);
-      localStorage.setItem('isLoggedIn', 'true');
-      const isLoggedIn=localStorage.getItem("isLoggedIn")
-      if (isLoggedIn==='true') {
-        toast.success("Login successfully",{
-          duration:8000
-        })
+      localStorage.setItem("isLoggedIn", "true");
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (isLoggedIn === "true") {
+        toast("Login successfully !", {
+          icon: "😁",
+        });
       }
-      setTimeout(()=> navigate("/Profile"),3000);
+      setTimeout(() => navigate("/Profile"), 3000);
     } else {
-      toast.error("Login failed",{
-        duration:2000
-      })
+      toast("Login failed !", {
+        icon: "😢",
+      });
     }
+  };
+
+  const handlePass = async (event) => {
+    event.preventDefault();
+    fetch(`http://localhost:3001/users`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        const userFound = data.find((user) => user.email === email);
+      if (userFound ) {
+        const userId = userFound._id;
+        console.log(userId);
+        console.log(userFound.password)
+        localStorage.setItem("Id", userId);
+      }
+      })
+      .catch((error) => console.error(error));
+    navigate("/Reset");
   };
 
   return (
@@ -48,7 +65,9 @@ const Login = () => {
       <form onSubmit={handleSubmit}>
         <div className="user-details">
           <div className="input-box">
-            <label className="details">Email<ion-icon name="mail-outline"></ion-icon></label>
+            <label className="details">
+              Email<ion-icon name="mail-outline"></ion-icon>
+            </label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -87,7 +106,17 @@ const Login = () => {
                 <i className="bi bi-eye-slash-fill"></i>
               )}
             </button>
-              <a style={{position:"relative",top:"20px",textDecoration:"underline"}} href="">Forgot password ?</a>
+            <a
+              style={{
+                position: "relative",
+                top: "20px",
+                textDecoration: "underline",
+              }}
+              href=""
+              onClick={handlePass}
+            >
+              Forgot password ?
+            </a>
           </div>
         </div>
         <button type="submit" className="btn btn-info">
@@ -95,7 +124,7 @@ const Login = () => {
         </button>
       </form>
       <div className="Login">
-        <div style={{textDecoration:"underline"}}>Don't have an account</div>
+        <div style={{ textDecoration: "underline" }}>Don't have an account</div>
         <NavLink to="/Register">
           <button className="btn btn-primary">Register here</button>
         </NavLink>

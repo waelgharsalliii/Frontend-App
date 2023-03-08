@@ -90,7 +90,7 @@ const Profile = () => {
           }),
         });
         console.log(email);
-        toast('Good Job!', {
+        toast('User successfully updated !', {
           icon: '👏',
         });
       } catch (error) {

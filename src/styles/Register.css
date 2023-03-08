@@ -159,3 +159,21 @@ border-radius: 10px;
 .btn-outline-secondary {
     border-style: none;
 }
+
+.btn-warning {
+    position: relative;
+    left:100px
+}
+
+
+.btn-warning:hover {
+background: salmon;
+color:white;
+border: none;
+border-radius: 10px;
+}
+
+.cancel {
+    position: relative;
+    left:200px;
+}

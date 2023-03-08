@@ -20,12 +20,12 @@ const Register = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (
-      email == "" ||
-      fname == "" ||
-      lname == "" ||
-      birthdate == "" ||
-      password == "" ||
-      phone == ""
+      email === "" ||
+      fname === "" ||
+      lname === "" ||
+      birthdate === "" ||
+      password === "" ||
+      phone === ""
     ) {
       toast.error("Please fill all required fields");
     } else {

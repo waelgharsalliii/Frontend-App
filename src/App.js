@@ -13,6 +13,7 @@ import { Route, Routes } from 'react-router-dom';
 import Register from './SignUp/Register';
 import Login from './SignIn/Login';
 import Profile from './Profile/Profile';
+import Reset from './SignIn/Reset';
 
 
 
@@ -39,6 +40,7 @@ function App() {
             <Route  path="/Register"  element={<Register/>}/>
             <Route path="/Login"  element={<Login />} />
             <Route path="/Profile" element={<Profile/>} />
+            <Route path="/Reset" element={<Reset/>}></Route>
           </Routes>
           {/* <About/> */}
           {/* <New></New> */}
