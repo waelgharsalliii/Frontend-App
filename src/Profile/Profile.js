@@ -10,7 +10,6 @@ import { toast, Toaster } from "react-hot-toast";
 const Profile = () => {
   const navigate=useNavigate();
   const [user, setUser] = useState(null);
-  const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
@@ -45,7 +44,6 @@ const Profile = () => {
 
   useEffect(() => {
     if (user) {
-      setEmail(user.email);
       setFname(user.fname);
       setLname(user.lname);
       setPass(user.password);
@@ -83,13 +81,11 @@ const Profile = () => {
           body: JSON.stringify({
             fname,
             lname,
-            email,
             password,
             phone,
             birthdate
           }),
         });
-        console.log(email);
         toast('User successfully updated !', {
           icon: '👏',
         });
@@ -121,14 +117,6 @@ const Profile = () => {
                 type="text"
                 value={lname}
                 onChange={(e) => setLname(e.target.value)}
-              />
-            </div>
-            <div className="input-box">
-              <label>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="input-box">
