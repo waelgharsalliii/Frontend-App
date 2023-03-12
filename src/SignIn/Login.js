@@ -114,13 +114,13 @@ const Login = () => {
             />
             <button
               type="button"
-              className="btn btn-outline-secondary"
+              className="btn btn-outline-secondary sec"
               onClick={togglePasswordVisibility}
               style={{
                 position: "absolute",
-                top: "40%",
+                top: "45%",
                 right: "30px",
-                transform: "translateY(-10%)",
+                transform: "translateY(-50%)",
               }}
             >
               {passwordVisible ? (

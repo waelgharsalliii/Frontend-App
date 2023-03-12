@@ -8,18 +8,6 @@
     margin:auto;
 }
 
-
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-
 .Container .title {
     font-size:25px;
     font-weight: 500;
@@ -80,8 +68,6 @@ border-color: #9b59b6;
 }
 
 
-
-
 .btn-info {
     height:100%;
     outline:none;
@@ -116,7 +102,7 @@ color:black;
 border:none;
 }
 
-@media (max-width:584px) {
+@media (max-width:590px) {
     .Container {
         max-width:100%;
     }
@@ -124,7 +110,26 @@ border:none;
         margin-bottom: 15px;
         width: 100%;
     }
+    .sec {
+        position: absolute !important;
+        top: 52% !important;
+        right: 30px !important;
+        transform:none !important;
+        margin-left: -35px !important;
+      }
 }
+
+@media (max-width:359px) {
+    .sec {
+        position: absolute !important;
+        top: 49% !important;
+        right: 30px !important;
+        transform:none !important;
+      }
+}
+
+
+  
 
 
 
