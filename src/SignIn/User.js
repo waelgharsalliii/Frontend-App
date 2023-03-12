@@ -1,17 +1,29 @@
 import React from "react";
+import {  useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 
 const User = (props) => {
 
+  const navigate=useNavigate();
+
 
     const DeleteHandler=async (e)=> {
         e.preventDefault();
-        console.log(props.id);
         await fetch(`http://localhost:3001/users/${props.id}`, {
-            method: "DELETE",headers: {
-                'Content-Type': 'application/json'
-              }
+            method: "DELETE",headers: { "Content-Type": "application/json" },
           });
+          window.location.reload();
+    }
+
+    const CancelHandler=(e)=> {
+      e.preventDefault();
+      navigate("/Login");
+      localStorage.removeItem("Id");
+    }
+
+    const UpdateHandler=(e)=> {
+      e.preventDefault();
+      navigate("/Profile");
     }
 
   return (
@@ -40,6 +52,8 @@ const User = (props) => {
           </tr>
         </tbody>
       </table>
+      <br />
+      <button className="btn btn-danger" onClick={CancelHandler}>Cancel</button>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 
@@ -30,6 +30,7 @@ const Reset = () => {
 
   return (
     <div className="Container">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="title">Email</div>
       <br />
       <form>

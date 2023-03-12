@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import toast, { Toaster } from "react-hot-toast";
@@ -15,6 +15,22 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const Passregex=/^[a-zA-Z0-9]*$/;
+    if (
+      email === "" ||
+      password === "" 
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    if (!email.endsWith("@gmail.com")) {
+      toast.error("Email should end with @gmail.com");
+      return;
+    }
+    if (!password.match(Passregex)) {
+      toast.error("Password should only contain letters or numbers");
+      return;
+    }
     let userFound = null;
     const response = await fetch(`http://localhost:3001/users`);
     const data = await response.json();
@@ -23,7 +39,7 @@ const Login = () => {
     if (userFound) {
       localStorage.setItem("Id",userFound._id);
       if (userFound.isAdmin == true) {
-        navigate("/users");
+        navigate("/users");  
         return;
       } else {
         const response = await fetch("http://localhost:3001/users/signin", {
@@ -61,6 +77,11 @@ const Login = () => {
     navigate("/Reset");
   }
 
+
+
+  
+
+
   return (
     <div className="Container">
       <Toaster position="top-center" reverseOrder={false} />
@@ -79,7 +100,6 @@ const Login = () => {
               placeholder="email@gmail.com"
               id="email"
               name="email"
-              required
             />
           </div>
           <div className="input-box">
@@ -91,7 +111,6 @@ const Login = () => {
               id="password"
               name="password"
               type={passwordVisible ? "text" : "password"}
-              required
             />
             <button
               type="button"

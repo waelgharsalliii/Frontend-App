@@ -5,20 +5,27 @@ import User from "./User";
 const Users = () => {
   const [data, setData] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(`http://localhost:3001/users`);
-      const data = await response.json();
-      console.log(data);
-      setData(data.filter((user) => !user.isAdmin));
-    };
 
+  
+
+
+  const fetchData = async () => {
+    const response = await fetch(`http://localhost:3001/users`);
+    const data = await response.json();
+    setData(data.filter((user) => !user.isAdmin));
+  };
+
+
+  
+
+
+  useEffect(() => {
     fetchData();
   }, []);
 
   return (
     <div>
-      {data.map((user, index) => (
+      { localStorage.getItem("Id") ? data.map((user, index) => (
         <User
         id={user._id}
           key={index}
@@ -28,7 +35,7 @@ const Users = () => {
           phone={user.phone}
           birthdate={user.birthdate}
         />
-      ))}
+      )): (<div className="Loading">dear client you should sign in again next time</div>) }
     </div>
   );
 };

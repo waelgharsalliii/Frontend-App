@@ -83,12 +83,12 @@ const NavBar = () => {
                 stet dolor sed justo kasd. Ut dolor sed magna dolor sea diam.
                 Sit diam sit justo amet ipsum vero ipsum clita lorem
               </p> */}
-              <a
-                href=""
+              <NavLink
+                to="/Register"
                 className="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInLeft"
               >
-               Join Us Now
-              </a>
+               Sign Up Now
+              </NavLink>
               <NavLink
                 to="/Login"
                 className="btn btn-outline-light py-sm-3 px-sm-5 rounded-pill animated slideInRight"

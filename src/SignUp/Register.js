@@ -28,27 +28,41 @@ const Register = () => {
       phone === ""
     ) {
       toast.error("Please fill all required fields");
-    } else {
-      fetch("http://localhost:3001/users/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          password,
-          fname,
-          lname,
-          birthdate,
-          phone,
-        }),
-      })
-        .then((data) => {
-          toast.success("registered successfully");
-          setTimeout(() => navigate("/Login"), 3000);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      return;
     }
+    const Nameregex = /^[A-Z][a-z]*$/;
+    const Passregex=/^[a-zA-Z0-9]*$/;
+    if (!lname.match(Nameregex) || !fname.match(Nameregex)) {
+      toast.error("lname or fname must start with a capital letter and should only contain letters");
+      return;
+    }
+    if (!email.endsWith("@gmail.com")) {
+      toast.error("Email should end with @gmail.com");
+      return;
+    }
+    if (!password.match(Passregex)) {
+      toast.error("Password should only contain letters or numbers");
+      return;
+    }
+      fetch("http://localhost:3001/users/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+        fname,
+        lname,
+        birthdate,
+        phone,
+      }),
+    })
+      .then((data) => {
+        toast.success("registered successfully");
+        setTimeout(() => navigate("/Login"), 2000);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
@@ -104,7 +118,9 @@ const Register = () => {
             />
           </div>
           <div className="input-box">
-            <label className="details">Email<ion-icon name="mail-outline"></ion-icon></label>
+            <label className="details">
+              Email<ion-icon name="mail-outline"></ion-icon>
+            </label>
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}

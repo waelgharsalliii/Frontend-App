@@ -3,6 +3,7 @@ import jwt_decode from "jwt-decode";
 import "../styles/Register.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
+import { format } from "date-fns";
 
 
 
@@ -11,7 +12,6 @@ import { toast, Toaster } from "react-hot-toast";
 const Profile = () => {
   const navigate=useNavigate();
   const [user, setUser] = useState(null);
-  const [password, setPass] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [birthdate, setBirthdate] = useState("");
@@ -49,9 +49,8 @@ const Profile = () => {
     if (user) {
       setFname(user.fname);
       setLname(user.lname);
-      setPass(user.password);
       setPhone(user.phone);
-      setBirthdate(new Date(user.birthdate))
+      setBirthdate(format(new Date(user.birthdate), "yyyy-MM-dd"));
     }
   }, [user]);
 
@@ -70,6 +69,20 @@ const Profile = () => {
 
   const UpdateUser = async (event) => {
     event.preventDefault();
+    const Nameregex = /^[A-Z][a-z]*$/;
+    if (
+      fname === "" ||
+      lname === "" ||
+      birthdate === "" ||
+      phone === ""
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    if (!lname.match(Nameregex) || !fname.match(Nameregex)) {
+      toast.error("lname or fname must start with a capital letter and should only contain letters");
+      return;
+    }
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -85,7 +98,6 @@ const Profile = () => {
           body: JSON.stringify({
             fname,
             lname,
-            password,
             phone,
             birthdate
           }),
@@ -93,7 +105,6 @@ const Profile = () => {
         toast('User successfully updated !', {
           icon: '👏',
         });
-        setTimeout(() => navigate("/Login"), 3000);
         localStorage.removeItem('Id');
         localStorage.removeItem('token');
         localStorage.removeItem('isLoggedIn');
@@ -120,7 +131,6 @@ const Profile = () => {
             localStorage.removeItem('token');
             localStorage.removeItem('isLoggedIn');
             response.json();
-            setTimeout(() => navigate("/Login"), 3000);
         } 
         else {
             toast.error("Error");
@@ -160,14 +170,6 @@ const Profile = () => {
                 type="text"
                 value={lname}
                 onChange={(e) => setLname(e.target.value)}
-              />
-            </div>
-            <div className="input-box">
-              <label>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPass(e.target.value)}
               />
             </div>
             <div className="input-box">
@@ -226,7 +228,7 @@ const Profile = () => {
     </div>
         </div>
       ) : (
-        <p className="Loading">Loading...</p>
+        <p className="Loading">dear client you should sign in again next time</p>
       )}
     </div>
   );
