@@ -58,8 +58,13 @@ const Login = () => {
             });
           }
           setTimeout(() => navigate("/Profile"), 3000);
-        } else {
-          toast("Login failed !", {
+        } else if (!userFound.isActivated) {
+          toast("Login failed, please verify your email to verify your account !", {
+            icon: "😢",
+          });
+        }
+        else {
+          toast("Login failed, your account is banned !", {
             icon: "😢",
           });
         }

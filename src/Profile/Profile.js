@@ -206,7 +206,7 @@ const Profile = () => {
             <label className="details">Old Password</label>
             <input
               value={oldPassword}
-              placeholder="Old Password"
+              placeholder="*************"
               type="password"
               onChange={(e) => setOldPassword(e.target.value)}
             />
@@ -216,7 +216,7 @@ const Profile = () => {
             <label className="details">New Password</label>
             <input
               value={newPassword}
-              placeholder="New Password"
+              placeholder="************"
               type="password"
               onChange={(e) => setnewPassword(e.target.value)}
             />
