@@ -2,6 +2,7 @@ import React, {  useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import toast, { Toaster } from "react-hot-toast";
+import NavBar from  '../components/NavBar';
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -39,7 +40,7 @@ const Login = () => {
     if (userFound) {
       localStorage.setItem("Id",userFound._id);
       if (userFound.isAdmin == true) {
-        navigate("/users");  
+        navigate("/Admin");  
         return;
       } else {
         const response = await fetch("http://localhost:3001/users/signin", {
@@ -57,21 +58,27 @@ const Login = () => {
               icon: "😁",
             });
           }
-          setTimeout(() => navigate("/Profile"), 3000);
+          setTimeout(() => navigate("/User"), 3000);
         } else if (!userFound.isActivated) {
           toast("Login failed, please verify your email to verify your account !", {
             icon: "😢",
           });
         }
-        else {
+        else if (userFound.isBanned)  {
           toast("Login failed, your account is banned !", {
             icon: "😢",
           });
         }
+        else
+        {
+          toast.error("Please check your password",{
+            duration:3000
+          })
+        }
       }
     }
     else {
-      toast.error("Please check your email or password",{
+      toast.error("Please check your email",{
         duration:3000
       })
     }
@@ -83,11 +90,20 @@ const Login = () => {
   }
 
 
+  const LoginWithGoogleHandler=async (e)=> {
+    e.preventDefault();
+    await fetch(`http://localhost:3001/auth/google`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+  }
 
   
 
 
   return (
+    <div>
+      <NavBar></NavBar>
     <div className="Container">
       <Toaster position="top-center" reverseOrder={false} />
       <div className="title">Login</div>
@@ -151,7 +167,7 @@ const Login = () => {
           Login
         </button>
         <ion-icon name="log-out-outline"></ion-icon>
-        <button className="google"><ion-icon name="logo-google"></ion-icon></button>
+        <button className="google" onClick={LoginWithGoogleHandler}><ion-icon name="logo-google"></ion-icon></button>
       </form>
       <div className="Login">
         <div style={{ textDecoration: "underline" }}>Don't have an account</div>
@@ -159,6 +175,7 @@ const Login = () => {
           <button className="btn btn-primary">Register here</button>
         </NavLink>
       </div>
+    </div>
     </div>
   );
 };

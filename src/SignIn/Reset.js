@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
+import NavBar from  '../components/NavBar';
 
 
 const Reset = () => {
@@ -29,9 +30,11 @@ const Reset = () => {
     const [email,setEmail]=useState("");
 
   return (
+    <div>
+      <NavBar></NavBar>
     <div className="Container">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="title">Email</div>
+      <div className="title">Password Retrieval Form</div>
       <br />
       <form>
         <div className="user-details">
@@ -51,6 +54,7 @@ const Reset = () => {
           <button className="btn btn-success" onClick={RetrievePassword}>Retrieve Password</button>
           <button onClick={CancelRetrieve} className="btn btn-danger">Cancel</button>
           </form>
+          </div>
           </div>
   )
 };

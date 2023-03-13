@@ -1,45 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/Register.css";
-import User from "./User";
 
-const Users = () => {
-  const [data, setData] = useState([]);
-  const [utilisateur,setUtilisateur]=useState([]);
+const NavAdmin = () => {
+  const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
 
-
   
-
-
-  const fetchData = async () => {
-    const response = await fetch(`http://localhost:3001/users`);
-    const data = await response.json();
-    setData(data.filter((user) => !user.isAdmin));
-  };
-
-
-  
-
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
     fetch(`http://localhost:3001/users/${Id}`, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
-        setUtilisateur(data);
+        setUser(data);
       });
-    fetchData();
   }, []);
 
-
   useEffect(() => {
-    if (utilisateur) {
-      setFname(utilisateur.fname);
-      setLname(utilisateur.lname);
+    if (user) {
+      setFname(user.fname);
+      setLname(user.lname);
     }
-  }, [utilisateur]);
+  }, [user]);
+
+
+
+
+  const LogoutHandler = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("Id");
+  };
 
 
   const NavBarUser = (
@@ -82,9 +75,9 @@ const Users = () => {
                 {fname} {lname}
               </a>
               <div className="dropdown-menu m-0">
-                <a href="" className="dropdown-item">
+                <NavLink to="/users" className="dropdown-item">
                   Manage Users
-                </a>
+                </NavLink>
                 <a href="" className="dropdown-item">
                   Logout
                 </a>
@@ -103,10 +96,10 @@ const Users = () => {
             <i className="fa fa-search"></i>
           </button>
           <NavLink
-            to="/Admin"
-            className="btn btn-secondary text-light rounded-pill py-2 px-4 ms-3"
+            to="/Login" 
           >
-            Logout
+            <button className="btn btn-primary" onClick={LogoutHandler}>Logout</button>
+            
           </NavLink>
         </div>
       </nav>
@@ -115,13 +108,13 @@ const Users = () => {
           <div className="row g-5 py-5">
             <div className="col-lg-6 text-center text-lg-start">
               {/* <h1 className="text-white mb-4 animated zoomIn">
-                All in one SEO tool need to grow your business rapidly
-              </h1>
-              <p className="text-white pb-3 animated zoomIn">
-                Tempor rebum no at dolore lorem clita rebum rebum ipsum rebum
-                stet dolor sed justo kasd. Ut dolor sed magna dolor sea diam.
-                Sit diam sit justo amet ipsum vero ipsum clita lorem
-              </p> */}
+                    All in one SEO tool need to grow your business rapidly
+                  </h1>
+                  <p className="text-white pb-3 animated zoomIn">
+                    Tempor rebum no at dolore lorem clita rebum rebum ipsum rebum
+                    stet dolor sed justo kasd. Ut dolor sed magna dolor sea diam.
+                    Sit diam sit justo amet ipsum vero ipsum clita lorem
+                  </p> */}
             </div>
             <div className="col-lg-6 text-center text-lg-start">
               <img className="img-fluid" src="" alt="" />
@@ -164,19 +157,11 @@ const Users = () => {
   return (
     <div>
       {NavBarUser}
-      { localStorage.getItem("Id") ? data.map((user, index) => (
-        <User
-        id={user._id}
-          key={index}
-          fname={user.fname}
-          lname={user.lname}
-          email={user.email}
-          phone={user.phone}
-          birthdate={user.birthdate}
-        />
-      )): (<div className="Loading">dear client you should sign in again next time</div>) }
+      <div className="welcome-message">
+        <h1>Welcome back, admin! Your presence is always appreciated</h1>
+      </div>
     </div>
   );
 };
 
-export default Users;
+export default NavAdmin;

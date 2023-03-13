@@ -20,9 +20,9 @@ const NavBar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarCollapse">
           <div className="navbar-nav ms-auto py-0">
-            <a href="" className="nav-item nav-link active">
+            <NavLink to="/home" className="nav-item nav-link active">
               Home
-            </a>
+            </NavLink>
             <a href="" className="nav-item nav-link">
               About
             </a>

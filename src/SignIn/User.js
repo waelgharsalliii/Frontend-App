@@ -19,11 +19,7 @@ const User = (props) => {
     });
   };
 
-  const CancelHandler = (e) => {
-    e.preventDefault();
-    navigate("/Login");
-    localStorage.removeItem("Id");
-  };
+  
 
   const UpdateHandler = (e) => {
     e.preventDefault();
@@ -98,10 +94,6 @@ const User = (props) => {
           </tr>
         </tbody>
       </table>
-      <br />
-      <button className="btn btn-danger" onClick={CancelHandler}>
-        Cancel
-      </button>
     </div>
   );
 };

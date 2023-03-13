@@ -1,48 +1,41 @@
-import './App.css';
-import NavBar from './components/NavBar';
-import Spinner from './components/Spinner';
-import {React,useState,useEffect} from 'react';
-import About from './components/About';
-import New from './components/New';
-import Service from './components/Service';
-import Portfolio from './components/Portfolio';
-import Testimonial from './components/Testimonial';
-import Team from './components/Team';
-import Footer from './components/Footer';
-import { Route, Routes } from 'react-router-dom';
-import Register from './SignUp/Register';
-import Login from './SignIn/Login';
-import Profile from './Profile/Profile';
-import Reset from './SignIn/Reset';
-import Users from './SignIn/Users';
+import "./App.css";
 
-
-
+import Spinner from "./components/Spinner";
+import { React, useState, useEffect } from "react";
+import Footer from "./components/Footer";
+import { Route, Routes, Navigate } from "react-router-dom";
+import Register from "./SignUp/Register";
+import Login from "./SignIn/Login";
+import Profile from "./Profile/Profile";
+import Reset from "./SignIn/Reset";
+import Users from "./SignIn/Users";
+import Home from "./components/Home";
+import Nav from "./Nav/Nav";
+import NavAdmin from "./Nav/NavAdmin";
 
 function App() {
-  
   const [loaded, setLoaded] = useState(false);
-  
-  
 
-  
   useEffect(() => {
     setTimeout(() => {
       setLoaded(true);
-    }, 2000); 
+    }, 2000);
   }, []);
 
   return (
     <div className="container-xxl bg-white p-0">
-      {loaded ? ( 
+      {loaded ? (
         <>
-          <NavBar />
           <Routes>
-            <Route  path="/Register"  element={<Register/>}/>
-            <Route path="/Login"  element={<Login />} />
-            <Route path="/Profile" element={<Profile/>} />
-            <Route path="/Reset" element={<Reset/>}></Route>
-            <Route path="/users" element={<Users/>}></Route>
+            <Route exact path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/Register" element={<Register />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/User" element={<Nav />}></Route>
+            <Route path="/Profile" element={<Profile />} />
+             <Route path="/Admin" element={<NavAdmin />}></Route> 
+            <Route path="/Reset" element={<Reset />}></Route>
+            <Route path="/users" element={<Users />}></Route>
           </Routes>
           {/* <About/> */}
           {/* <New></New> */}
@@ -52,7 +45,7 @@ function App() {
           <Team></Team> */}
           <Footer></Footer>
         </>
-      ) : ( 
+      ) : (
         <Spinner />
       )}
     </div>

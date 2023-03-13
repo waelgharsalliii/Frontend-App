@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import toast, { Toaster } from "react-hot-toast";
+import NavBar from  '../components/NavBar';
 
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -66,6 +67,8 @@ const Register = () => {
   };
 
   return (
+    <div>
+      <NavBar></NavBar>
     <div className="Container">
       <div className="title">Registration</div>
       <Toaster position="top-center" reverseOrder={false} />
@@ -170,6 +173,7 @@ const Register = () => {
           <button className="btn btn-primary">Login here</button>
         </NavLink>
       </div>
+    </div>
     </div>
   );
 };
