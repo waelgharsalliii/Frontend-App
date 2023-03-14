@@ -94,6 +94,18 @@ const Login = () => {
   const LoginWithGoogleHandler=async (e)=> {
     e.preventDefault();
     window.open("http://localhost:3001/auth/google");
+    const response = await fetch(`http://localhost:3001/users`);
+    const data = await response.json();
+    const filteredData=data.filter((user) => user.email===email);
+    if (filteredData.length > 0) {
+      const ident = filteredData[0]._id;
+      localStorage.setItem("Id", ident);
+      console.log(ident);
+      navigate("/User");
+    } else {
+      // handle case where user doesn't exist
+      console.log("User not found");
+    }
   }
 
   
