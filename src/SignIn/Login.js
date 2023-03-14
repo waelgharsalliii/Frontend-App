@@ -90,12 +90,10 @@ const Login = () => {
   }
 
 
+
   const LoginWithGoogleHandler=async (e)=> {
     e.preventDefault();
-    await fetch(`http://localhost:3001/auth/google`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    })
+    window.open("http://localhost:3001/auth/google");
   }
 
   
