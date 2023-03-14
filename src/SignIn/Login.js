@@ -24,10 +24,6 @@ const Login = () => {
       toast.error("Please fill all required fields");
       return;
     }
-    if (!email.endsWith("@gmail.com")) {
-      toast.error("Email should end with @gmail.com");
-      return;
-    }
     if (!password.match(Passregex)) {
       toast.error("Password should only contain letters or numbers");
       return;
@@ -39,7 +35,7 @@ const Login = () => {
     userFound = data.find((user) => user.email === email);
     if (userFound) {
       localStorage.setItem("Id",userFound._id);
-      if (userFound.isAdmin == true) {
+      if (userFound.isAdmin === true) {
         navigate("/Admin");  
         return;
       } else {

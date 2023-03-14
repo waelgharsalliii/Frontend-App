@@ -78,9 +78,9 @@ const NavAdmin = () => {
                 <NavLink to="/users" className="dropdown-item">
                   Manage Users
                 </NavLink>
-                <a href="" className="dropdown-item">
+                <NavLink to="/Login" className="dropdown-item" onClick={LogoutHandler}>
                   Logout
-                </a>
+                </NavLink>
                 <a href="" className="dropdown-item">
                   About
                 </a>

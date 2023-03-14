@@ -85,9 +85,9 @@ const Users = () => {
                 <a href="" className="dropdown-item">
                   Manage Users
                 </a>
-                <a href="" className="dropdown-item">
+                <NavLink to="/Admin" className="dropdown-item">
                   Logout
-                </a>
+                </NavLink>
                 <a href="" className="dropdown-item">
                   About
                 </a>

@@ -12,6 +12,7 @@ import Users from "./SignIn/Users";
 import Home from "./components/Home";
 import Nav from "./Nav/Nav";
 import NavAdmin from "./Nav/NavAdmin";
+import UpdateAdmin from "./Profile/UpdateAdmin";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -33,6 +34,7 @@ function App() {
             <Route path="/Login" element={<Login />} />
             <Route path="/User" element={<Nav />}></Route>
             <Route path="/Profile" element={<Profile />} />
+            <Route path="/Update" element={<UpdateAdmin/>}></Route>
              <Route path="/Admin" element={<NavAdmin />}></Route> 
             <Route path="/Reset" element={<Reset />}></Route>
             <Route path="/users" element={<Users />}></Route>

@@ -1,40 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
+import { NavLink } from "react-router-dom";
 import "../styles/Register.css";
+import { format } from "date-fns";
 
-const Nav = () => {
+export default function UpdateAdmin() {
   const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-  const navigate=useNavigate();
+  const [birthdate, setBirthdate] = useState("");
+  const [phone, setPhone] = useState("");
+  const [admin,setAdmin]=useState(null);
+  const [adminFname,setAdminFname]=useState("");
+  const [adminLname,setAdminLname]=useState("");
 
-  
 
-  useEffect(() => {
-    const Id = localStorage.getItem("Id");
-    fetch(`http://localhost:3001/users/${Id}`, { method: "GET" })
+
+
+  const FetchAdmin=()=> {
+    const AdminId=localStorage.getItem("Id")
+    fetch(`http://localhost:3001/users/${AdminId}`, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
-        setUser(data);
+        setAdmin(data);
       });
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      setFname(user.fname);
-      setLname(user.lname);
-    }
-  }, [user]);
-
-
-
-
-  const LogoutHandler = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("Id");
-  };
-
+  }
 
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
@@ -73,13 +63,13 @@ const Nav = () => {
                 className="nav-link dropdown-toggle"
                 data-bs-toggle="dropdown"
               >
-                {fname} {lname}
+                {adminFname} {adminLname}
               </a>
               <div className="dropdown-menu m-0">
-                <NavLink to="/Profile" className="dropdown-item">
-                  Edit Profile
-                </NavLink>
-                <NavLink to="/Login" className="dropdown-item" onClick={LogoutHandler}>
+                <a href="" className="dropdown-item">
+                  Manage Users
+                </a>
+                <NavLink to="/User" className="dropdown-item">
                   Logout
                 </NavLink>
                 <a href="" className="dropdown-item">
@@ -97,10 +87,10 @@ const Nav = () => {
             <i className="fa fa-search"></i>
           </button>
           <NavLink
-            to="/Login" 
+            to="/User"
+            className="btn btn-secondary text-light rounded-pill py-2 px-4 ms-3"
           >
-            <button className="btn btn-primary" onClick={LogoutHandler}>Logout</button>
-            
+            Logout
           </NavLink>
         </div>
       </nav>
@@ -155,14 +145,123 @@ const Nav = () => {
     </div>
   );
 
+  useEffect(() => {
+    FetchAdmin();
+    const ident=localStorage.getItem("Ident");
+    fetch(`http://localhost:3001/users/${ident}`, {
+      method:"GET"
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+
+  useEffect(() => {
+    if (admin) {
+      setAdminFname(admin.fname);
+      setAdminLname(admin.lname);
+    }
+  }, [admin]);
+
+  const UpdateUser =async  (e) => {
+    e.preventDefault();
+    const Nameregex = /^[A-Z][a-z]*$/;
+    if (fname === "" || lname === "" || birthdate === "" || phone === "") {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    if (!lname.match(Nameregex) || !fname.match(Nameregex)) {
+      toast.error(
+        "lname or fname must start with a capital letter and should only contain letters"
+      );
+      return;
+    }
+    const ident=localStorage.getItem("Ident");
+    await fetch(`http://localhost:3001/users/updateAdmin/${ident}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fname,
+            lname,
+            phone,
+            birthdate,
+          }),
+        });
+        toast("User successfully updated !", {
+            icon: "👏",
+          });
+  };
+
+
+
+  useEffect(() => {
+    if (user) {
+      setFname(user.fname);
+      setLname(user.lname);
+      setPhone(user.phone);
+      setBirthdate(format(new Date(user.birthdate), "yyyy-MM-dd"));
+    }
+  }, [user]);
+
   return (
     <div>
-      {NavBarUser}
-      <div className="welcome-message">
-        <h1>Welcome back to your personal space! We're glad to have you here</h1>
-      </div>
+      {user ? (
+        <div>
+          {NavBarUser}
+          <div className="Container">
+            <Toaster position="top-center" reverseOrder={false} />
+            <div className="title">Profile</div>
+            <h2 className="detail">You can update the details</h2>
+            <div className="user-details">
+              <div className="input-box">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  value={fname}
+                  onChange={(e) => setFname(e.target.value)}
+                />
+              </div>
+              <div className="input-box">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  value={lname}
+                  onChange={(e) => setLname(e.target.value)}
+                />
+              </div>
+              <div className="input-box">
+                <label>Phone</label>
+                <input
+                  type="number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+              <div className="input-box">
+                <label>Birthdate</label>
+                <input
+                  type="date"
+                  value={birthdate}
+                  onChange={(e) => setBirthdate(e.target.value)}
+                />
+              </div>
+            </div>
+            <br />
+            <button className="btn btn-info" onClick={UpdateUser}>
+              Edit Profile
+            </button>
+          </div>
+        </div>
+      ) : (
+        <p className="Loading">
+          dear Admin you should sign in again next time
+        </p>
+      )}
     </div>
   );
-};
-
-export default Nav;
+}

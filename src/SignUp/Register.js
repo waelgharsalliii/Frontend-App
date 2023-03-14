@@ -37,10 +37,6 @@ const Register = () => {
       toast.error("lname or fname must start with a capital letter and should only contain letters");
       return;
     }
-    if (!email.endsWith("@gmail.com")) {
-      toast.error("Email should end with @gmail.com");
-      return;
-    }
     if (!password.match(Passregex)) {
       toast.error("Password should only contain letters or numbers");
       return;

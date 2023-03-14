@@ -23,7 +23,8 @@ const User = (props) => {
 
   const UpdateHandler = (e) => {
     e.preventDefault();
-    navigate("/Profile");
+    localStorage.setItem("Ident",props.id);
+    navigate("/Update");
   };
 
   const BanHandler = async (e) => {
@@ -79,7 +80,7 @@ const User = (props) => {
               </button>
             </td>
             <td>
-              <button className="refresh">
+              <button className="refresh" onClick={UpdateHandler}>
                 <ion-icon name="refresh"></ion-icon>
               </button>
             </td>

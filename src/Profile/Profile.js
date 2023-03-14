@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import "../styles/Register.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { format } from "date-fns";
 
@@ -57,9 +57,9 @@ const Profile = () => {
                 <a href="" className="dropdown-item">
                   Edit Profile
                 </a>
-                <a href="" className="dropdown-item">
+                <NavLink to="/User" className="dropdown-item">
                   Logout
-                </a>
+                </NavLink>
                 <a href="" className="dropdown-item">
                   About
                 </a>
@@ -185,7 +185,6 @@ const Profile = () => {
         const userId = decoded.userId;
         await fetch(`http://localhost:3001/users/update/${userId}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
