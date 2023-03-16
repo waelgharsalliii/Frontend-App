@@ -5,6 +5,8 @@ import { NavLink } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { format } from "date-fns";
 
+
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
@@ -13,7 +15,15 @@ const Profile = () => {
   const [phone, setPhone] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setnewPassword] = useState("");
+  const [profilePic, setProfilePic] = useState("");
+  const [utilisateur,setutilisateur]=useState(null);
 
+
+
+  const handleProfilePicChange = (event) => {
+    setProfilePic(event.target.files[0]);
+  };
+  
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
       <nav
@@ -51,7 +61,8 @@ const Profile = () => {
                 className="nav-link dropdown-toggle"
                 data-bs-toggle="dropdown"
               >
-                {fname} {lname}
+               <img src={`img/${profilePic}`} alt="Image" height="35" width="35" style={{  borderRadius: '50%',border: '2px solid #ccc',boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.2)',padding: '2px' }} /> {fname} {lname}  
+  
               </a>
               <div className="dropdown-menu m-0">
                 <a href="" className="dropdown-item">
@@ -140,7 +151,6 @@ const Profile = () => {
         const decoded = jwt_decode(token);
         console.log(decoded);
         const userId = decoded.userId;
-        console.log(userId);
         fetch(`http://localhost:3001/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
@@ -153,6 +163,17 @@ const Profile = () => {
         console.error(error);
       }
     }
+    else {
+      const Id=localStorage.getItem("Id");
+      fetch(`http://localhost:3001/users/${Id}`, {
+          method:"GET"
+        })
+        .then((response) => response.json())
+          .then((data) => {
+            setutilisateur(data);
+          })
+          .catch((error) => console.error(error));
+    }
   }, []);
 
   useEffect(() => {
@@ -161,21 +182,31 @@ const Profile = () => {
       setLname(user.lname);
       setPhone(user.phone);
       setBirthdate(format(new Date(user.birthdate), "yyyy-MM-dd"));
+      setProfilePic(user.profilePic);
     }
   }, [user]);
 
 
+  useEffect(()=> {
+    if (utilisateur) {
+      setFname(utilisateur.fname);
+      setLname(utilisateur.lname);
+      setPhone(utilisateur.phone);
+      setBirthdate(format(new Date(utilisateur.birthdate), "yyyy-MM-dd"));
+      setProfilePic(utilisateur.profilePic);
+      }
+  },[utilisateur])
+
+
   const UpdateUser = async (event) => {
     event.preventDefault();
-    const Nameregex = /^[A-Z][a-z]*$/;
+    const Nameregex = /^[A-Za-z\s]+$/;
     if (fname === "" || lname === "" || birthdate === "" || phone === "") {
       toast.error("Please fill all required fields");
       return;
     }
     if (!lname.match(Nameregex) || !fname.match(Nameregex)) {
-      toast.error(
-        "lname or fname must start with a capital letter and should only contain letters"
-      );
+      toast.error("lname or fname   should only contain letters or spaces");
       return;
     }
     const token = localStorage.getItem("token");
@@ -194,6 +225,7 @@ const Profile = () => {
             lname,
             phone,
             birthdate,
+            profilePic
           }),
         });
         toast("User successfully updated !", {
@@ -202,6 +234,24 @@ const Profile = () => {
       } catch (error) {
         console.error(error);
       }
+    }
+    else {
+      const Id=localStorage.getItem("Id");
+      await fetch(`http://localhost:3001/users/updateUser/${Id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fname,
+            lname,
+            phone,
+            birthdate,
+          }),
+        });
+        toast("User successfully updated !", {
+          icon: "👏",
+        });
     }
   };
 
@@ -229,6 +279,111 @@ const Profile = () => {
 
   return (
     <div>
+      {
+        utilisateur ? (
+          <div>
+            {NavBarUser}
+            <div className="Container">
+              <Toaster position="top-center" reverseOrder={false} />
+              <div className="title">Profile</div>
+              <h2 className="detail">You can update the details</h2>
+              <div className="user-details">
+                <div className="input-box">
+                  <label>First Name</label>
+                  <input
+                    type="text"
+                    value={fname}
+                    onChange={(e) => setFname(e.target.value)}
+                  />
+                </div>
+                <div className="input-box">
+                  <label>Last Name</label>
+                  <input
+                    type="text"
+                    value={lname}
+                    onChange={(e) => setLname(e.target.value)}
+                  />
+                </div>
+                <div className="input-box">
+                  <label>Phone</label>
+                  <input
+                    type="number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+                <div className="input-box">
+                  <label>Birthdate</label>
+                  <input
+                    type="date"
+                    value={birthdate}
+                    onChange={(e) => setBirthdate(e.target.value)}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                <label style={{fontWeight:"500" }}>Profile Picture</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="file"
+                    id="profile-pic"
+                    accept="image/*"
+                    onChange={handleProfilePicChange}
+                    style={{marginTop:"10px"}}
+                  />
+                  <div
+                    style={{
+                      backgroundColor: "#eee",
+                      width: "px",
+                      height: "0px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                  ></div>
+                </div>
+              </div>
+              </div>
+              <br />
+              <button className="btn btn-info" onClick={UpdateUser}>
+                Edit Profile 
+              </button>
+              <div className="Container">
+                <Toaster position="top-center" reverseOrder={false} />
+                <div className="title">Reset Password</div>
+                <br />
+                <form onSubmit={handleChange}>
+                  <div className="user-details">
+                    <div className="input-box">
+                      <label className="details">Old Password</label>
+                      <input
+                        value={oldPassword}
+                        placeholder="*************"
+                        type="password"
+                        onChange={(e) => setOldPassword(e.target.value)}
+                      />
+                    </div>
+  
+                    <div className="input-box">
+                      <label className="details">New Password</label>
+                      <input
+                        value={newPassword}
+                        placeholder="************"
+                        type="password"
+                        onChange={(e) => setnewPassword(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <button className="btn btn-warning">Change Password</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="Loading">
+            dear client you should sign in again next time
+          </p>
+        )
+      }
       {user ? (
         <div>
           {NavBarUser}
@@ -269,10 +424,32 @@ const Profile = () => {
                   onChange={(e) => setBirthdate(e.target.value)}
                 />
               </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+              <label style={{fontWeight:"500" }}>Profile Picture</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="file"
+                  id="profile-pic"
+                  accept="image/*"
+                  onChange={handleProfilePicChange}
+                  style={{marginTop:"10px"}}
+                />
+                <div
+                  style={{
+                    backgroundColor: "#eee",
+                    width: "px",
+                    height: "0px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                ></div>
+              </div>
+            </div>
             </div>
             <br />
             <button className="btn btn-info" onClick={UpdateUser}>
-              Edit Profile
+              Edit Profile 
             </button>
             <div className="Container">
               <Toaster position="top-center" reverseOrder={false} />

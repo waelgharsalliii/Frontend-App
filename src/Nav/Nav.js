@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "../styles/Register.css";
 
 const Nav = () => {
   const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-  const navigate=useNavigate();
+  const [profilePic,setProfilePic]=useState("");
 
   
 
@@ -23,6 +23,7 @@ const Nav = () => {
     if (user) {
       setFname(user.fname);
       setLname(user.lname);
+      setProfilePic(user.profilePic);
     }
   }, [user]);
 
@@ -73,7 +74,7 @@ const Nav = () => {
                 className="nav-link dropdown-toggle"
                 data-bs-toggle="dropdown"
               >
-                {fname} {lname}
+               <img src={`img/${profilePic}`} alt="Image" height="35" width="35" style={{  borderRadius: '50%',border: '2px solid #ccc',boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.2)',padding: '2px' }} /> {fname} {lname}
               </a>
               <div className="dropdown-menu m-0">
                 <NavLink to="/Profile" className="dropdown-item">

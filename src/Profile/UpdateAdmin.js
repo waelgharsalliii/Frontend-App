@@ -87,7 +87,7 @@ export default function UpdateAdmin() {
             <i className="fa fa-search"></i>
           </button>
           <NavLink
-            to="/User"
+            to="/Admin"
             className="btn btn-secondary text-light rounded-pill py-2 px-4 ms-3"
           >
             Logout
@@ -168,14 +168,14 @@ export default function UpdateAdmin() {
 
   const UpdateUser =async  (e) => {
     e.preventDefault();
-    const Nameregex = /^[A-Z][a-z]*$/;
+    const Nameregex = /^[A-Za-z\s]+$/;
     if (fname === "" || lname === "" || birthdate === "" || phone === "") {
       toast.error("Please fill all required fields");
       return;
     }
     if (!lname.match(Nameregex) || !fname.match(Nameregex)) {
       toast.error(
-        "lname or fname must start with a capital letter and should only contain letters"
+        "lname or fname should only contain letters or spaces"
       );
       return;
     }
@@ -195,6 +195,7 @@ export default function UpdateAdmin() {
         toast("User successfully updated !", {
             icon: "👏",
           });
+        localStorage.removeItem("Ident");
   };
 
 
@@ -210,9 +211,9 @@ export default function UpdateAdmin() {
 
   return (
     <div>
+      {NavBarUser}
       {user ? (
         <div>
-          {NavBarUser}
           <div className="Container">
             <Toaster position="top-center" reverseOrder={false} />
             <div className="title">Profile</div>

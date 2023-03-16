@@ -117,7 +117,7 @@ border:none;
     }
     .sec {
         position: absolute !important;
-        top: 52% !important;
+        top: 46% !important;
         right: 30px !important;
         transform:none !important;
         margin-left: -35px !important;
@@ -183,9 +183,6 @@ color:3px solid black;
 height: 50px;
 }
 
-.google {
-    border: none;
-}
 
 /* .navbar-brand {
     width: 200px; 
@@ -257,6 +254,10 @@ height: 50px;
     font-size: 32px;
     color: #333;
     margin-top: 0;
+  }
+
+  .WithGoogle {
+    margin-top: 20px;
   }
   
   

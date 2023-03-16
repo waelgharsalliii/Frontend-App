@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import toast, { Toaster } from "react-hot-toast";
-import NavBar from  '../components/NavBar';
+import NavBar from "../components/NavBar";
 
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -12,48 +12,56 @@ const Register = () => {
   const [lname, setLname] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [phone, setPhone] = useState("");
+  const [profilePic, setProfilePic] = useState(null);
   const navigate = useNavigate();
 
+  const handleProfilePicChange = (event) => {
+    setProfilePic(event.target.files[0]);
+  };
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     if (
       email === "" ||
       fname === "" ||
       lname === "" ||
       birthdate === "" ||
       password === "" ||
-      phone === ""
+      phone === "" || profilePic===""
     ) {
       toast.error("Please fill all required fields");
       return;
     }
-    const Nameregex = /^[A-Z][a-z]*$/;
-    const Passregex=/^[a-zA-Z0-9]*$/;
+    const Nameregex = /^[A-Za-z\s]+$/;
+    const Passregex = /^[a-zA-Z0-9]*$/;
     if (!lname.match(Nameregex) || !fname.match(Nameregex)) {
-      toast.error("lname or fname must start with a capital letter and should only contain letters");
+      toast.error("lname or fname   should only contain letters or spaces");
       return;
     }
     if (!password.match(Passregex)) {
       toast.error("Password should only contain letters or numbers");
       return;
     }
-      fetch("http://localhost:3001/users/signup", {
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("fname", fname);
+    formData.append("lname", lname);
+    formData.append("birthdate", birthdate);
+    formData.append("phone", phone);
+    if (profilePic) {
+      formData.append("profilePic", profilePic, profilePic.name);
+    }
+
+    await fetch("http://localhost:3001/users/signup", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        password,
-        fname,
-        lname,
-        birthdate,
-        phone,
-      }),
+      body: formData,
     })
-      .then((data) => {
+      .then(() => {
         toast.success("registered successfully");
         setTimeout(() => navigate("/Login"), 2000);
       })
@@ -65,111 +73,133 @@ const Register = () => {
   return (
     <div>
       <NavBar></NavBar>
-    <div className="Container">
-      <div className="title">Registration</div>
-      <Toaster position="top-center" reverseOrder={false} />
-      <br />
-      <form onSubmit={handleSubmit}>
-        <div className="user-details">
-          <div className="input-box">
-            <label className="details">FirstName</label>
-            <input
-              value={fname}
-              placeholder="firstname"
-              id="firstname"
-              type="text"
-              name="firstname"
-              onChange={(e) => setFname(e.target.value)}
-            />
-          </div>
+      <div className="Container">
+        <div className="title">Registration</div>
+        <Toaster position="top-center" reverseOrder={false} />
+        <br />
+        <form onSubmit={handleSubmit}>
+          <div className="user-details">
+            <div className="input-box">
+              <label className="details">FirstName</label>
+              <input
+                value={fname}
+                placeholder="firstname"
+                id="firstname"
+                type="text"
+                name="firstname"
+                onChange={(e) => setFname(e.target.value)}
+              />
+            </div>
+            <div className="input-box">
+              <label className="details">LastName</label>
+              <input
+                value={lname}
+                placeholder="lastname"
+                id="lastname"
+                type="text"
+                name="lastname"
+                onChange={(e) => setLname(e.target.value)}
+              />
+            </div>
 
-          <div className="input-box">
-            <label className="details">LastName</label>
-            <input
-              value={lname}
-              placeholder="lastname"
-              id="lastname"
-              type="text"
-              name="lastname"
-              onChange={(e) => setLname(e.target.value)}
-            />
-          </div>
+            <div className="input-box">
+              <label className="details">Birthdate</label>
+              <input
+                value={birthdate}
+                type="date"
+                id="birthdate"
+                name="birthdate"
+                onChange={(e) => setBirthdate(e.target.value)}
+              />
+            </div>
+            <div className="input-box">
+              <label className="details">Phone</label>
+              <input
+                value={phone}
+                placeholder="phone"
+                type="number"
+                id="phone"
+                name="phone"
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+            <div className="input-box">
+              <label className="details">
+                Email<ion-icon name="mail-outline"></ion-icon>
+              </label>
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="email@gmail.com"
+                id="email"
+                name="email"
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <label style={{fontWeight:"500" }}>Profile Picture</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="file"
+                  id="profile-pic"
+                  accept="image/*"
+                  onChange={handleProfilePicChange}
+                  style={{marginTop:"10px"}}
+                />
+                <div
+                  style={{
+                    backgroundColor: "#eee",
+                    width: "px",
+                    height: "0px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                ></div>
+              </div>
+            </div>
 
-          <div className="input-box">
-            <label className="details">Birthdate</label>
-            <input
-              value={birthdate}
-              type="date"
-              id="birthdate"
-              name="birthdate"
-              onChange={(e) => setBirthdate(e.target.value)}
-            />
-          </div>
-          <div className="input-box">
-            <label className="details">Phone</label>
-            <input
-              value={phone}
-              placeholder="phone"
-              type="number"
-              id="phone"
-              name="phone"
-              onChange={(e) => setPhone(e.target.value)}
-            />
-          </div>
-          <div className="input-box">
-            <label className="details">
-              Email<ion-icon name="mail-outline"></ion-icon>
-            </label>
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              placeholder="email@gmail.com"
-              id="email"
-              name="email"
-            />
-          </div>
+            <div className="input-box" style={{ position: "relative" }}>
+              <label className="details">Password</label>
+              <input
+                value={password}
+                onChange={(e) => setPass(e.target.value)}
+                type={passwordVisible ? "text" : "password"}
+                placeholder="***********"
+                id="password"
+                name="password"
+              />
 
-          <div className="input-box" style={{ position: "relative" }}>
-            <label className="details">Password</label>
-            <input
-              value={password}
-              onChange={(e) => setPass(e.target.value)}
-              type={passwordVisible ? "text" : "password"}
-              placeholder="***********"
-              id="password"
-              name="password"
-            />
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={togglePasswordVisibility}
-              style={{
-                position: "absolute",
-                top: "70%",
-                right: "2px",
-                transform: "translateY(-50%)",
-              }}
-            >
-              {passwordVisible ? (
-                <i className="bi bi-eye-fill"></i>
-              ) : (
-                <i className="bi bi-eye-slash-fill"></i>
-              )}
-            </button>
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={togglePasswordVisibility}
+                style={{
+                  position: "absolute",
+                  top: "70%",
+                  right: "2px",
+                  transform: "translateY(-50%)",
+                }}
+              >
+                {passwordVisible ? (
+                  <i className="bi bi-eye-fill"></i>
+                ) : (
+                  <i className="bi bi-eye-slash-fill"></i>
+                )}
+              </button>
+            </div>
           </div>
+          <button type="submit" className="btn btn-info">
+            Register
+          </button>
+        </form>
+        <div className="Login">
+          <div>Already have an account?</div>
+          <NavLink to="/Login">
+            <button className="btn btn-primary">Login here</button>
+          </NavLink>
         </div>
-        <button type="submit" className="btn btn-info">
-          Register
-        </button>
-      </form>
-      <div className="Login">
-        <div>Already have an account?</div>
-        <NavLink to="/Login">
-          <button className="btn btn-primary">Login here</button>
-        </NavLink>
       </div>
-    </div>
     </div>
   );
 };

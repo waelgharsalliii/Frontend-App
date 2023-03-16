@@ -5,13 +5,11 @@ import User from "./User";
 
 const Users = () => {
   const [data, setData] = useState([]);
-  const [utilisateur,setUtilisateur]=useState([]);
+  const [utilisateur, setUtilisateur] = useState([]);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-
-
-  
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const [users, setUsers] = useState([]);
 
   const fetchData = async () => {
     const response = await fetch(`http://localhost:3001/users`);
@@ -19,9 +17,16 @@ const Users = () => {
     setData(data.filter((user) => !user.isAdmin));
   };
 
-
-  
-
+  const RechercheHandler = async (e) => {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:3001/users`);
+    const ListUsers = await response.json();
+    const filteredUsers = ListUsers.filter((user) =>
+      user.fname.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    console.log(searchQuery);
+    setUsers(filteredUsers);
+  };
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -33,14 +38,12 @@ const Users = () => {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     if (utilisateur) {
       setFname(utilisateur.fname);
       setLname(utilisateur.lname);
     }
   }, [utilisateur]);
-
 
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
@@ -149,8 +152,9 @@ const Users = () => {
                   type="text"
                   className="form-control bg-transparent border-light p-3"
                   placeholder="Type search keyword"
+                  onChange={(event) => setSearchQuery(event.target.value)}
                 />
-                <button className="btn btn-light px-4">
+                <button className="btn btn-light px-4" onClick={RechercheHandler}>
                   <i className="bi bi-search"></i>
                 </button>
               </div>
@@ -164,17 +168,23 @@ const Users = () => {
   return (
     <div>
       {NavBarUser}
-      { localStorage.getItem("Id") ? data.map((user, index) => (
-        <User
-        id={user._id}
-          key={index}
-          fname={user.fname}
-          lname={user.lname}
-          email={user.email}
-          phone={user.phone}
-          birthdate={user.birthdate}
-        />
-      )): (<div className="Loading">dear client you should sign in again next time</div>) }
+      {localStorage.getItem("Id") ? (
+        data.map((user, index) => (
+          <User
+            id={user._id}
+            key={index}
+            fname={user.fname}
+            lname={user.lname}
+            email={user.email}
+            phone={user.phone}
+            birthdate={user.birthdate}
+          />
+        ))
+      ) : (
+        <div className="Loading">
+          dear client you should sign in again next time
+        </div>
+      )}
     </div>
   );
 };

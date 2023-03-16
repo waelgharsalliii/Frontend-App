@@ -32,6 +32,7 @@ const NavAdmin = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("Id");
+    localStorage.removeItem("Ident");
   };
 
 
