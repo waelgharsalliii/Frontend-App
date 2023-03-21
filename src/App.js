@@ -11,8 +11,8 @@ import Reset from "./SignIn/Reset";
 import Users from "./SignIn/Users";
 import Home from "./components/Home";
 import Nav from "./Nav/Nav";
-import NavAdmin from "./Nav/NavAdmin";
 import UpdateAdmin from "./Profile/UpdateAdmin";
+import AdminDash from "./AdminDash/AdminDash";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -35,9 +35,9 @@ function App() {
             <Route path="/User" element={<Nav />}></Route>
             <Route path="/Profile" element={<Profile />} />
             <Route path="/Update" element={<UpdateAdmin/>}></Route>
-             <Route path="/Admin" element={<NavAdmin />}></Route> 
             <Route path="/Reset" element={<Reset />}></Route>
             <Route path="/users" element={<Users />}></Route>
+            <Route path="/Dash" element={<AdminDash />}></Route>
           </Routes>
           {/* <About/> */}
           {/* <New></New> */}

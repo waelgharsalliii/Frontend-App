@@ -16,6 +16,7 @@ const Profile = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setnewPassword] = useState("");
   const [profilePic, setProfilePic] = useState("");
+  const [confirmPassword,setConfirmPassword]=useState("");
   const [utilisateur,setutilisateur]=useState(null);
 
 
@@ -85,12 +86,6 @@ const Profile = () => {
           >
             <i className="fa fa-search"></i>
           </button>
-          <NavLink
-            to="/User"
-            className="btn btn-secondary text-light rounded-pill py-2 px-4 ms-3"
-          >
-            Logout
-          </NavLink>
         </div>
       </nav>
       <div className="container-xxl py-5 bg-primary hero-header mb-5">
@@ -198,6 +193,7 @@ const Profile = () => {
   },[utilisateur])
 
 
+
   const UpdateUser = async (event) => {
     event.preventDefault();
     const Nameregex = /^[A-Za-z\s]+$/;
@@ -258,9 +254,12 @@ const Profile = () => {
   const handleChange = async (event) => {
     event.preventDefault();
     const Id = localStorage.getItem("Id");
-    console.log(Id);
-    console.log(oldPassword);
-    await fetch(`http://localhost:3001/users/${Id}`, {
+    if (confirmPassword==="" || newPassword==="" ||  oldPassword==="") {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    if (confirmPassword===newPassword) {
+      await fetch(`http://localhost:3001/users/${Id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ oldPassword, newPassword }),
@@ -270,19 +269,25 @@ const Profile = () => {
           toast.success("Password updated successfully");
           response.json();
         } else {
-          toast.error("Error");
+          toast.error("old password incorrect");
         }
       })
       .catch((error) => console.error(error));
+    }
+    else {
+      toast.error("The password confirmation does not match the password you entered. Please try again",{
+        duration:2000
+      })
+      return;
+    }
   };
 
 
   return (
     <div>
-      {
-        utilisateur ? (
+      {NavBarUser}
+      { utilisateur ? (
           <div>
-            {NavBarUser}
             <div className="Container">
               <Toaster position="top-center" reverseOrder={false} />
               <div className="title">Profile</div>
@@ -372,6 +377,120 @@ const Profile = () => {
                         onChange={(e) => setnewPassword(e.target.value)}
                       />
                     </div>
+                    <div className="input-box">
+                      <label className="details">Confirm Password</label>
+                      <input
+                        value={confirmPassword}
+                        placeholder="************"
+                        type="password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <button className="btn btn-warning">Change Password</button>
+                </form>
+              </div>
+            </div>
+          </div>) :user ? (
+          <div>
+            <div className="Container">
+              <Toaster position="top-center" reverseOrder={false} />
+              <div className="title">Profile</div>
+              <h2 className="detail">You can update the details</h2>
+              <div className="user-details">
+                <div className="input-box">
+                  <label>First Name</label>
+                  <input
+                    type="text"
+                    value={fname}
+                    onChange={(e) => setFname(e.target.value)}
+                  />
+                </div>
+                <div className="input-box">
+                  <label>Last Name</label>
+                  <input
+                    type="text"
+                    value={lname}
+                    onChange={(e) => setLname(e.target.value)}
+                  />
+                </div>
+                <div className="input-box">
+                  <label>Phone</label>
+                  <input
+                    type="number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+                <div className="input-box">
+                  <label>Birthdate</label>
+                  <input
+                    type="date"
+                    value={birthdate}
+                    onChange={(e) => setBirthdate(e.target.value)}
+                  />
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                <label style={{fontWeight:"500" }}>Profile Picture</label>
+                <div style={{ position: "relative" }}>
+                  <input
+                    type="file"
+                    id="profile-pic"
+                    accept="image/*"
+                    onChange={handleProfilePicChange}
+                    style={{marginTop:"10px"}}
+                  />
+                  <div
+                    style={{
+                      backgroundColor: "#eee",
+                      width: "px",
+                      height: "0px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                  ></div>
+                </div>
+              </div>
+              </div>
+              <br />
+              <button className="btn btn-info" onClick={UpdateUser}>
+                Edit Profile 
+              </button>
+              <div className="Container">
+                <Toaster position="top-center" reverseOrder={false} />
+                <div className="title">Reset Password</div>
+                <br />
+                <form onSubmit={handleChange}>
+                  <div className="user-details">
+                    <div className="input-box">
+                      <label className="details">Old Password</label>
+                      <input
+                        value={oldPassword}
+                        placeholder="*************"
+                        type="password"
+                        onChange={(e) => setOldPassword(e.target.value)}
+                      />
+                    </div>
+  
+                    <div className="input-box">
+                      <label className="details">New Password</label>
+                      <input
+                        value={newPassword}
+                        placeholder="************"
+                        type="password"
+                        onChange={(e) => setnewPassword(e.target.value)}
+                      />
+                    </div>
+                    <div className="input-box">
+                      <label className="details">Confirm Password</label>
+                      <input
+                        value={confirmPassword}
+                        placeholder="************"
+                        type="password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                      />
+                    </div>
                   </div>
                   <button className="btn btn-warning">Change Password</button>
                 </form>
@@ -384,109 +503,6 @@ const Profile = () => {
           </p>
         )
       }
-      {user ? (
-        <div>
-          {NavBarUser}
-          <div className="Container">
-            <Toaster position="top-center" reverseOrder={false} />
-            <div className="title">Profile</div>
-            <h2 className="detail">You can update the details</h2>
-            <div className="user-details">
-              <div className="input-box">
-                <label>First Name</label>
-                <input
-                  type="text"
-                  value={fname}
-                  onChange={(e) => setFname(e.target.value)}
-                />
-              </div>
-              <div className="input-box">
-                <label>Last Name</label>
-                <input
-                  type="text"
-                  value={lname}
-                  onChange={(e) => setLname(e.target.value)}
-                />
-              </div>
-              <div className="input-box">
-                <label>Phone</label>
-                <input
-                  type="number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
-              <div className="input-box">
-                <label>Birthdate</label>
-                <input
-                  type="date"
-                  value={birthdate}
-                  onChange={(e) => setBirthdate(e.target.value)}
-                />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-              <label style={{fontWeight:"500" }}>Profile Picture</label>
-              <div style={{ position: "relative" }}>
-                <input
-                  type="file"
-                  id="profile-pic"
-                  accept="image/*"
-                  onChange={handleProfilePicChange}
-                  style={{marginTop:"10px"}}
-                />
-                <div
-                  style={{
-                    backgroundColor: "#eee",
-                    width: "px",
-                    height: "0px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center"
-                  }}
-                ></div>
-              </div>
-            </div>
-            </div>
-            <br />
-            <button className="btn btn-info" onClick={UpdateUser}>
-              Edit Profile 
-            </button>
-            <div className="Container">
-              <Toaster position="top-center" reverseOrder={false} />
-              <div className="title">Reset Password</div>
-              <br />
-              <form onSubmit={handleChange}>
-                <div className="user-details">
-                  <div className="input-box">
-                    <label className="details">Old Password</label>
-                    <input
-                      value={oldPassword}
-                      placeholder="*************"
-                      type="password"
-                      onChange={(e) => setOldPassword(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="input-box">
-                    <label className="details">New Password</label>
-                    <input
-                      value={newPassword}
-                      placeholder="************"
-                      type="password"
-                      onChange={(e) => setnewPassword(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <button className="btn btn-warning">Change Password</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <p className="Loading">
-          dear client you should sign in again next time
-        </p>
-      )}
     </div>
   );
 };

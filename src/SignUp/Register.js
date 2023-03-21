@@ -23,7 +23,7 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (
       email === "" ||
       fname === "" ||

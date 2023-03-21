@@ -66,6 +66,7 @@ const NavBar = () => {
           </button>
           <NavLink    to="/Register"
             className="btn btn-secondary text-light rounded-pill py-2 px-4 ms-3"
+            style={{backgroundColor:"#4777F5",border:"none"}}
           >
            Sign Up
           </NavLink>

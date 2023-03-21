@@ -54,19 +54,19 @@ const User = (props) => {
     <div className="table-container">
       <Toaster position="top-center" reverseOrder={false} />
       <table>
-        <thead>
-          <tr>
-            <th className="details">FirstName</th>
-            <th className="details">LastName</th>
-            <th className="details">Email</th>
-            <th className="details">Phone</th>
-            <th className="details">birthdate</th>
-            <th className="details">Delete</th>
-            <th className="details">Update</th>
-            <th className="details">Ban</th>
-            <th className="details">Unban</th>
-          </tr>
-        </thead>
+      <thead>
+        <tr>
+          <th className="details">FirstName</th>
+          <th className="details">LastName</th>
+          <th className="details">Email</th>
+          <th className="details">Phone</th>
+          <th className="details">birthdate</th>
+          <th className="details">Delete</th>
+          <th className="details">Update</th>
+          <th className="details">Ban</th>
+          <th className="details">Unban</th>
+        </tr>
+      </thead>
         <tbody>
           <tr>
             <td>{props.fname}</td>

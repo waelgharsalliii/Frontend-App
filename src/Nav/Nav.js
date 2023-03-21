@@ -97,12 +97,6 @@ const Nav = () => {
           >
             <i className="fa fa-search"></i>
           </button>
-          <NavLink
-            to="/Login" 
-          >
-            <button className="btn btn-primary" onClick={LogoutHandler}>Logout</button>
-            
-          </NavLink>
         </div>
       </nav>
       <div className="container-xxl py-5 bg-primary hero-header mb-5">

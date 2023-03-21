@@ -6,6 +6,8 @@ import NavBar from "../components/NavBar";
 import { GoogleLogin } from "@react-oauth/google";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
+import { LoginSocialFacebook } from "reactjs-social-login";
+import { FacebookLoginButton } from "react-social-login-buttons";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -35,7 +37,7 @@ const Login = () => {
     if (userFound) {
       localStorage.setItem("Id", userFound._id);
       if (userFound.isAdmin === true) {
-        navigate("/Admin");
+        navigate("/Dash");
         return;
       } else {
         const response = await fetch("http://localhost:3001/users/signin", {
@@ -123,7 +125,7 @@ const Login = () => {
                 onClick={togglePasswordVisibility}
                 style={{
                   position: "absolute",
-                  top: "39%",
+                  top: "33%",
                   right: "30px",
                   transform: "translateY(-50%)",
                 }}
@@ -160,9 +162,10 @@ const Login = () => {
                 const UserObject=data.filter((user)=>{
                   return user.email===detail.email
                 })
+                await fetch(`http://localhost:3001/users/updateProvider/${UserObject[0]._id}`,{method:"PUT"});
                 localStorage.setItem("Id",UserObject[0]._id);
                 if (UserObject[0].isAdmin) {
-                  navigate("/Admin");
+                  navigate("/Dash");
                 }
                 else {
                   navigate("/User");
@@ -174,6 +177,26 @@ const Login = () => {
             />
             </div>
           </GoogleOAuthProvider>
+          <LoginSocialFacebook 
+          appId="596195962421966"  
+          onResolve={async (response)=>{
+            const res = await fetch(`http://localhost:3001/users`);
+            const data =await res.json();
+            const Userobject=data.filter((user)=>{
+              return user.email===response.data.email
+            })
+            await fetch(`http://localhost:3001/users/updateFacebookProvider/${Userobject[0]._id}`,{method:"PUT"});
+            localStorage.setItem("Id",Userobject[0]._id);
+                if (Userobject[0].isAdmin) {
+                  navigate("/Dash");
+                }
+                else {
+                  navigate("/User");
+                }
+            console.log(response)}}
+          onReject={(error)=>console.log(error)}            >
+            <FacebookLoginButton style={{width:"250px",marginTop:"20px"}} />
+          </LoginSocialFacebook>
         </form>
         <div className="Login">
           <div style={{ textDecoration: "underline" }}>
