@@ -15,10 +15,12 @@
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",
     "react-jwt": "^1.1.8",
+    "react-paginate": "^8.1.4",
     "react-router-dom": "^6.8.2",
     "react-scripts": "5.0.1",
     "react-social-login-buttons": "^3.6.1",
     "reactjs-social-login": "^2.6.2",
+    "styled-components": "^5.3.9",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

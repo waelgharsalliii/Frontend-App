@@ -8,6 +8,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 import { LoginSocialFacebook } from "reactjs-social-login";
 import { FacebookLoginButton } from "react-social-login-buttons";
+import Footer from "../components/Footer";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -207,6 +208,7 @@ const Login = () => {
           </NavLink>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

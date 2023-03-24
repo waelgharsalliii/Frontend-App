@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import toast, { Toaster } from "react-hot-toast";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 
 const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -59,7 +60,7 @@ const Register = () => {
 
     await fetch("http://localhost:3001/users/signup", {
       method: "POST",
-      body: formData,
+      body: formData
     })
       .then(() => {
         toast.success("registered successfully");
@@ -200,6 +201,7 @@ const Register = () => {
           </NavLink>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import NavBar from  '../components/NavBar';
+import Footer from "../components/Footer";
 
 
 const Reset = () => {
@@ -55,6 +56,7 @@ const Reset = () => {
           <button onClick={CancelRetrieve} className="btn btn-danger">Cancel</button>
           </form>
           </div>
+          <Footer />
           </div>
   )
 };

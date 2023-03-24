@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import AdminFooter from './AdminFooter';
 
 
 export default function Content() {
@@ -312,12 +313,14 @@ export default function Content() {
           </li>
         </ul>
       </nav>
+
       <div style={{marginTop:"200px"}}>
       <div className="welcome-message">
         <h1>Welcome back, admin! Your presence is always appreciated</h1>
       </div>
     </div>
         </div>
+        <AdminFooter />
         </div>
   )
 }

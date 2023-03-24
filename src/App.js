@@ -2,7 +2,6 @@ import "./App.css";
 
 import Spinner from "./components/Spinner";
 import { React, useState, useEffect } from "react";
-import Footer from "./components/Footer";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Register from "./SignUp/Register";
 import Login from "./SignIn/Login";
@@ -13,6 +12,8 @@ import Home from "./components/Home";
 import Nav from "./Nav/Nav";
 import UpdateAdmin from "./Profile/UpdateAdmin";
 import AdminDash from "./AdminDash/AdminDash";
+import NotFound from "./components/NotFound";
+import AddClub from "./Club/AddClub";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -38,6 +39,8 @@ function App() {
             <Route path="/Reset" element={<Reset />}></Route>
             <Route path="/users" element={<Users />}></Route>
             <Route path="/Dash" element={<AdminDash />}></Route>
+            <Route path="/AddClub" element={<AddClub/>}></Route>
+            <Route path="*" element={<NotFound />}></Route>
           </Routes>
           {/* <About/> */}
           {/* <New></New> */}
@@ -45,7 +48,6 @@ function App() {
           {/* <Portfolio></Portfolio>
           <Testimonial></Testimonial>
           <Team></Team> */}
-          <Footer></Footer>
         </>
       ) : (
         <Spinner />

@@ -3,6 +3,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { NavLink } from "react-router-dom";
 import "../styles/Register.css";
 import { format } from "date-fns";
+import Sidebar from "../AdminDash/Sidebar";
 
 export default function UpdateAdmin() {
   const [user, setUser] = useState(null);
@@ -13,6 +14,7 @@ export default function UpdateAdmin() {
   const [admin,setAdmin]=useState(null);
   const [adminFname,setAdminFname]=useState("");
   const [adminLname,setAdminLname]=useState("");
+  const [profilePic,setProfilePic]=useState("");
 
 
 
@@ -28,7 +30,81 @@ export default function UpdateAdmin() {
 
   const LogoutHandler=()=> {
     localStorage.removeItem("Ident");
+    localStorage.removeItem("Id");
   }
+
+
+
+  useEffect(() => {
+    const ident=localStorage.getItem("Ident");
+    if (ident) {
+      FetchAdmin();
+    fetch(`http://localhost:3001/users/${ident}`, {
+      method:"GET"
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUser(data);
+      })
+      .catch((error) => console.error(error));
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (admin) {
+      setAdminFname(admin.fname);
+      setAdminLname(admin.lname);
+      setProfilePic(admin.profilePic);
+    }
+  }, [admin]);
+
+  const UpdateUser =async  (e) => {
+    e.preventDefault();
+    const Nameregex = /^[A-Za-z\s]+$/;
+    if (fname === "" || lname === "" || birthdate === "" || phone === "") {
+      toast.error("Please fill all required fields");
+      return;
+    }
+    if (!lname.match(Nameregex) || !fname.match(Nameregex)) {
+      toast.error(
+        "lname or fname should only contain letters or spaces"
+      );
+      return;
+    }
+    const ident=localStorage.getItem("Ident");
+    await fetch(`http://localhost:3001/users/updateAdmin/${ident}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fname,
+            lname,
+            phone,
+            birthdate,
+          }),
+        });
+        toast("User successfully updated !", {
+            icon: "👏",
+          });
+  };
+
+
+
+  useEffect(() => {
+    if (user) {
+      setFname(user.fname);
+      setLname(user.lname);
+      setPhone(user.phone);
+      setBirthdate(format(new Date(user.birthdate), "yyyy-MM-dd"));
+    }
+  }, [user]);
+
+
+
+
+
 
   const NavBarUser = (
     <div id="content-wrapper" className="d-flex flex-column">
@@ -267,6 +343,10 @@ export default function UpdateAdmin() {
         <span className="mr-2 d-none d-lg-inline text-gray-600 small">
           {adminFname} {adminLname}
         </span>
+        <img
+                className="img-profile rounded-circle"
+                src={`img/${profilePic}`}
+              />
       </a>
 
       <div
@@ -288,7 +368,7 @@ export default function UpdateAdmin() {
         <div className="dropdown-divider"></div>
         <NavLink
           className="dropdown-item"
-          to="/users"
+          to="/Login"
           data-toggle="modal"
           data-target="#logoutModal"
           onClick={LogoutHandler}
@@ -304,79 +384,7 @@ export default function UpdateAdmin() {
 <br />
 <br />
 <br />
-  </div>
-  </div>
-  );
-
-  useEffect(() => {
-    const ident=localStorage.getItem("Ident");
-    if (ident) {
-      FetchAdmin();
-    fetch(`http://localhost:3001/users/${ident}`, {
-      method:"GET"
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data);
-      })
-      .catch((error) => console.error(error));
-    }
-  }, []);
-
-
-  useEffect(() => {
-    if (admin) {
-      setAdminFname(admin.fname);
-      setAdminLname(admin.lname);
-    }
-  }, [admin]);
-
-  const UpdateUser =async  (e) => {
-    e.preventDefault();
-    const Nameregex = /^[A-Za-z\s]+$/;
-    if (fname === "" || lname === "" || birthdate === "" || phone === "") {
-      toast.error("Please fill all required fields");
-      return;
-    }
-    if (!lname.match(Nameregex) || !fname.match(Nameregex)) {
-      toast.error(
-        "lname or fname should only contain letters or spaces"
-      );
-      return;
-    }
-    const ident=localStorage.getItem("Ident");
-    await fetch(`http://localhost:3001/users/updateAdmin/${ident}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            fname,
-            lname,
-            phone,
-            birthdate,
-          }),
-        });
-        toast("User successfully updated !", {
-            icon: "👏",
-          });
-  };
-
-
-
-  useEffect(() => {
-    if (user) {
-      setFname(user.fname);
-      setLname(user.lname);
-      setPhone(user.phone);
-      setBirthdate(format(new Date(user.birthdate), "yyyy-MM-dd"));
-    }
-  }, [user]);
-
-  return (
-    <div>
-      {NavBarUser}
-      {user ? (
+{user ? (
         <div>
           <div className="Container">
             <Toaster position="top-center" reverseOrder={false} />
@@ -427,6 +435,18 @@ export default function UpdateAdmin() {
           dear Admin you should sign in again next time
         </p>
       )}
+  </div>
+  </div>
+  );
+
+  
+
+  return (
+    <div id="page-top">
+      <div id="wrapper">
+      <Sidebar />
+      {NavBarUser}
+      </div>
     </div>
   );
 }

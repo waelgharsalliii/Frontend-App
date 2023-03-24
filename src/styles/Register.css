@@ -261,3 +261,18 @@ th {
   margin-top: 20px;
 }
 
+.page-item {
+  margin: 0 5px;
+}
+
+
+.pagination-link {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-decoration: none;
+  color: #333;
+}
+

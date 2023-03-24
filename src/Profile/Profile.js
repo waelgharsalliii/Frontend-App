@@ -4,6 +4,7 @@ import "../styles/Register.css";
 import { NavLink } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { format } from "date-fns";
+import Footer from "../components/Footer";
 
 
 
@@ -25,6 +26,18 @@ const Profile = () => {
     setProfilePic(event.target.files[0]);
   };
   
+
+
+
+  const LogoutHandler=()=> {
+    localStorage.removeItem("token");
+    localStorage.removeItem("Id");
+    localStorage.removeItem("isLoggedIn");
+
+  }
+
+
+
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
       <nav
@@ -69,7 +82,7 @@ const Profile = () => {
                 <a href="" className="dropdown-item">
                   Edit Profile
                 </a>
-                <NavLink to="/User" className="dropdown-item">
+                <NavLink to="/Login" className="dropdown-item" onClick={LogoutHandler}>
                   Logout
                 </NavLink>
                 <a href="" className="dropdown-item">
@@ -503,6 +516,7 @@ const Profile = () => {
           </p>
         )
       }
+      <Footer />
     </div>
   );
 };

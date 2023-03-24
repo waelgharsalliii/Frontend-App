@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../styles/Register.css";
+import Footer from "../components/Footer";
 
 const Nav = () => {
   const [user, setUser] = useState(null);
@@ -156,6 +157,7 @@ const Nav = () => {
       <div className="welcome-message">
         <h1>Welcome back to your personal space! We're glad to have you here</h1>
       </div>
+      <Footer />
     </div>
   );
 };
