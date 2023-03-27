@@ -14,6 +14,8 @@ import UpdateAdmin from "./Profile/UpdateAdmin";
 import AdminDash from "./AdminDash/AdminDash";
 import NotFound from "./components/NotFound";
 import AddClub from "./Club/AddClub";
+import ClubList from "./Club/ClubList";
+import UpdateClub from "./Club/UpdateClub";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -40,6 +42,8 @@ function App() {
             <Route path="/users" element={<Users />}></Route>
             <Route path="/Dash" element={<AdminDash />}></Route>
             <Route path="/AddClub" element={<AddClub/>}></Route>
+            <Route path="/Clubs" element={<ClubList />}></Route>
+            <Route path="/UpdateClub" element={<UpdateClub />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
           {/* <About/> */}

@@ -57,12 +57,12 @@ const Register = () => {
     if (profilePic) {
       formData.append("profilePic", profilePic, profilePic.name);
     }
-
+    console.log(formData);
     await fetch("http://localhost:3001/users/signup", {
       method: "POST",
       body: formData
     })
-      .then(() => {
+      .then((data) => {
         toast.success("registered successfully");
         setTimeout(() => navigate("/Login"), 2000);
       })

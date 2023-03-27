@@ -1,114 +1,27 @@
 import React, { useState } from "react";
-import Sidebar from "../AdminDash/Sidebar";
-import styled from "styled-components";
-import "../styles/Register.css";
-import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 import { toast, Toaster } from "react-hot-toast";
+import { NavLink, useNavigate } from "react-router-dom";
+import Sidebar from "../AdminDash/Sidebar";
+import "../styles/Register.css";
 
-const MainContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-  top: 90px;
-  left: 200px;
-  width: 100%;
-  max-width: 700px;
-  max-height: 500px;
-  overflow-y: scroll;
-  background: #f0e3f0;
-  border-radius: 10px;
-  color: #4b0082;
-  text-transform: uppercase;
-  letter-spacing: 0.4rem;
-
-  /* Media queries */
-
-
-
-  @media only screen and (max-width: 1123px) {
-
-    top: 100px;
-    left: 50px;
-    max-width: 90%;
-  }
-
-  @media only screen and (max-width: 768px) {
-    top: 50px;
-    left: 50px;
-    max-width: 90%;
-  }
-
-  @media only screen and (max-width: 480px) {
-    top: 20px;
-    left: 20px;
-    right:20px;
-    max-width: 95%;
-    letter-spacing: 0.2rem;
-  }
-`;
-
-
-const WelcomeText = styled.h2`
-  margin: 20px 3rem 20px 20px;
-`;
-
-export default function AddClub() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [address,setAddress]=useState("");
-  const [logo,setLogo]=useState(null);
+export default function ClubList() {
+  const [clubs, setClubs] = useState([]);
   const [utilisateur, setUtilisateur] = useState([]);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const navigate=useNavigate();
 
-
-
-  const handleLogoChange = (event) => {
-    setLogo(event.target.files[0]);
-  };
-
-
-
-
-
-  const LogoutHandler = () => {
-    localStorage.removeItem("Id");
-  };
-
-
-  const AddClubHandler = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("address", address);
-    if (logo) {
-      formData.append("logo", logo, logo.name);
-    }
-  
-    try {
-      const response = await fetch(`http://localhost:3001/clubs/add`, {
-        method: "POST",
-        body: formData,
-      });
-  
-  
-      if (!response.ok) {
-        throw new Error("Failed to add club");
-      }
-      toast.success("Club Added");
-      setTimeout(() => navigate("/Clubs"), 2000);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add club");
+  const FetchClubs = async () => {
+    const response = await fetch(`http://localhost:3001/clubs`);
+    const data = await response.json();
+    if (data) {
+        setClubs(data);
     }
   };
-  
-  
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -127,11 +40,35 @@ export default function AddClub() {
     }
   }, [utilisateur]);
 
-  
+  useEffect(() => {
+    if ( clubs || clubs.length !== 0) {
+        FetchClubs();
+    }
+  }, []);
+
+  const LogoutHandler = () => {
+    localStorage.removeItem("Id");
+  };
+
+  const DeleteClubHandler=async (e,club)=> {
+    e.preventDefault();
+    await fetch(`http://localhost:3001/clubs/delete/${club._id}`, {
+      method: "DELETE"
+    });
+    window.location.reload();
+    toast.success("Club deleted successfully", {
+      duration: 3000,
+    });
+  }
+
+  const UpdateClubHandler=async (e,club) => {
+    e.preventDefault();
+    localStorage.setItem("ClubId",club._id); 
+    navigate("/UpdateClub"); 
+ }
 
   const NavBarUser = (
     <div id="content-wrapper" className="d-flex flex-column">
-      <Toaster position="top-center" reverseOrder={false} />
       <div id="content">
         <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
           <button
@@ -416,56 +353,47 @@ export default function AddClub() {
             </li>
           </ul>
         </nav>
-        <MainContainer>
-          <WelcomeText>add a club</WelcomeText>
-          <form onSubmit={AddClubHandler}>
-            <div className="form-group">
-              <label>Name </label>
-              <input
-                type="text"
-                placeholder="Enter club name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="Club"
-                id="name"
-              />
+        <Toaster position="top-center" reverseOrder={false} />
+        {clubs && clubs.length > 0 ? (
+          clubs.map((club) => (
+            <div className="div1">
+              <Card style={{ width: "18rem", marginRight: "10px" }}>
+                <Card.Img
+                  variant="top"
+                  src={process.env.PUBLIC_URL + `/img/${club.logo}`}
+                />
+                <Card.Body>
+                  <Card.Title>Club Name: {club.name}</Card.Title>
+                  <Card.Text>Club Description: {club.description}</Card.Text>
+                  <Card.Text>Club Address: {club.address}</Card.Text>
+                  <Button variant="primary" onClick={(e)=>UpdateClubHandler(e,club)}>Update</Button>
+                  <button
+                    class="btn btn-danger btn-circle"
+                    style={{ marginLeft: "5px" }}
+                    onClick={(e)=>DeleteClubHandler(e,club)}
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </Card.Body>
+              </Card>
             </div>
-            <div className="form-group">
-              <label>Description </label>
-              <textarea
-                placeholder="Enter club description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                id="description"
-              />
+          ))
+        ) : (
+          <div className="container-fluid">
+            <div className="text-center" style={{marginTop:"90px"}}>
+              <div className="error mx-auto" data-text="404">
+                404
+              </div>
+              <p className="lead text-gray-800 mb-5">No Clubs Found</p>
+              <p className="text-gray-500 mb-0">
+                It looks like you should add some clubs...
+              </p>
+              <NavLink to="/Dash">
+              <a>&larr; Back to Dashboard</a>
+              </NavLink>
             </div>
-            <div className="form-group">
-              <label>Address</label>
-              <input
-                placeholder="Enter club address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="Club"
-                id="address"
-              />
-            </div>
-            <div className="form-group">
-              <label>Logo</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleLogoChange}
-                id="logo"
-              />
-            </div>
-            <button  className="btn btn-success btn-icon-split" type="submit">
-              <span className="icon text-white-50">
-                <i className="fas fa-check"></i>
-              </span>
-              <span className="text">Add</span>
-            </button>
-          </form>
-        </MainContainer>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -473,7 +401,7 @@ export default function AddClub() {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar />
+        <Sidebar></Sidebar>
         {NavBarUser}
       </div>
     </div>

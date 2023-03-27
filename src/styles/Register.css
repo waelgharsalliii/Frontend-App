@@ -276,3 +276,42 @@ th {
   color: #333;
 }
 
+
+.Club {
+  background-color:   #f6eef6;
+  border-radius: 2rem;
+  width: 80%;
+  height: 3rem;
+  padding: 1rem;
+  border:none;
+}
+
+
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none; 
+  font-family: Arial, sans-serif; 
+  font-size: 16px; 
+  line-height: 1.5; 
+  width: 100%; 
+  height: 150px;
+}
+
+.btn-icon-split .icon {
+position: relative;
+right:12px;
+}
+
+.btn-icon-split {
+padding-top: 0px;
+padding-bottom: 0px;
+margin-bottom: 10px;
+}
+
+.div1 {
+  display:inline-flex;
+  margin-top:100px;
+  margin-left: 5px;
+}

@@ -42,20 +42,22 @@ export default function Sidebar() {
             </li>
 
             
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            <li className="nav-item">
+                <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                     aria-expanded="true" aria-controls="collapseUtilities">
-                    <i class="fas fa-fw fa-chart-area"></i>
+                    <i className="fas fa-fw fa-chart-area"></i>
                     <span>Clubs</span>
                 </a>
-                <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Utilities:</h6>
+                    <div className="bg-white py-2 collapse-inner rounded">
+                        <h6 className="collapse-header">Custom Utilities:</h6>
                         <NavLink to="/AddClub">
-                        <a class="collapse-item">Add a club</a>
+                        <a className="collapse-item">Add a club</a>
                         </NavLink>
-                        <a class="collapse-item" href="utilities-border.html">View All Clubs</a>
+                        <NavLink to="/Clubs">
+                        <a className="collapse-item">View All Clubs</a>
+                        </NavLink>
                     </div>
                 </div>
             </li>
