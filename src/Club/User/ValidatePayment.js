@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import "../styles/Register.css";
-import Footer from "../components/Footer";
+import React, { useEffect, useState } from 'react'
+import { toast, Toaster } from 'react-hot-toast';
+import { NavLink } from 'react-router-dom';
+import Footer from '../../components/Footer';
 
-const Nav = () => {
-  const [user, setUser] = useState(null);
+export default function ValidatePayment() {
+
+
+
+    const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
-  const [profilePic,setProfilePic]=useState("");
+  const [profilePic, setProfilePic] = useState("");
 
-  
+
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -29,13 +32,14 @@ const Nav = () => {
   }, [user]);
 
 
-
-
   const LogoutHandler = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("Id");
+    localStorage.removeItem("ClubId");
+    localStorage.removeItem("paymentId");
   };
+
 
 
   const NavBarUser = (
@@ -66,22 +70,38 @@ const Nav = () => {
             <a href="" className="nav-item nav-link">
               Events
             </a>
-            <NavLink to="/payment" className="nav-item nav-link">
+            <a href="" className="nav-item nav-link">
               Clubs
-            </NavLink>
+            </a>
             <div className="nav-item dropdown">
               <a
                 href="#"
                 className="nav-link dropdown-toggle"
                 data-bs-toggle="dropdown"
               >
-               <img src={`img/${profilePic}`} alt="Image" height="35" width="35" style={{  borderRadius: '50%',border: '2px solid #ccc',boxShadow: '0px 0px 4px rgba(0, 0, 0, 0.2)',padding: '2px' }} /> {fname} {lname}
+                <img
+                  src={`img/${profilePic}`}
+                  alt="Image"
+                  height="35"
+                  width="35"
+                  style={{
+                    borderRadius: "50%",
+                    border: "2px solid #ccc",
+                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.2)",
+                    padding: "2px",
+                  }}
+                />{" "}
+                {fname} {lname}
               </a>
               <div className="dropdown-menu m-0">
                 <NavLink to="/Profile" className="dropdown-item">
                   Edit Profile
                 </NavLink>
-                <NavLink to="/Login" className="dropdown-item" onClick={LogoutHandler}>
+                <NavLink
+                  to="/Login"
+                  className="dropdown-item"
+                  onClick={LogoutHandler}
+                >
                   Logout
                 </NavLink>
                 <a href="" className="dropdown-item">
@@ -105,13 +125,13 @@ const Nav = () => {
           <div className="row g-5 py-5">
             <div className="col-lg-6 text-center text-lg-start">
               {/* <h1 className="text-white mb-4 animated zoomIn">
-                    All in one SEO tool need to grow your business rapidly
-                  </h1>
-                  <p className="text-white pb-3 animated zoomIn">
-                    Tempor rebum no at dolore lorem clita rebum rebum ipsum rebum
-                    stet dolor sed justo kasd. Ut dolor sed magna dolor sea diam.
-                    Sit diam sit justo amet ipsum vero ipsum clita lorem
-                  </p> */}
+                        All in one SEO tool need to grow your business rapidly
+                      </h1>
+                      <p className="text-white pb-3 animated zoomIn">
+                        Tempor rebum no at dolore lorem clita rebum rebum ipsum rebum
+                        stet dolor sed justo kasd. Ut dolor sed magna dolor sea diam.
+                        Sit diam sit justo amet ipsum vero ipsum clita lorem
+                      </p> */}
             </div>
             <div className="col-lg-6 text-center text-lg-start">
               <img className="img-fluid" src="" alt="" />
@@ -151,15 +171,38 @@ const Nav = () => {
     </div>
   );
 
+
+  const ValidatePaymentHandler=async (e)=> {
+    e.preventDefault();
+    const paymentId=localStorage.getItem("paymentId");
+    const Id=localStorage.getItem("Id");
+    const ClubId=localStorage.getItem("ClubId");
+    const response = await fetch(
+        `http://localhost:3001/api/${ClubId}/${Id}/payment/${paymentId}`,
+        { method: "POST" }
+      );
+    if (response.ok) {
+        toast.success("Thank you for your payment. Your membership with our club has been processed. Please allow us some time to validate your payment");
+    }  
+  } 
+
   return (
     <div>
       {NavBarUser}
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="welcome-message">
-        <h1>Welcome back to your personal space! We're glad to have you here</h1>
+        <h1>
+          Secure your spot now and unlock exclusive benefits by completing your
+          membership payment today!
+        </h1>
       </div>
-      <Footer />
+      <button  className="btn btn-warning btn-icon-split" style={{position:"relative",left:"500px"}} onClick={ValidatePaymentHandler}>
+        <span className="icon text-white-50">
+          <i className="fas fa-exclamation-triangle"></i>
+        </span>
+        <span className="text">Validate Payment</span>
+      </button>
+      <Footer /> 
     </div>
   );
-};
-
-export default Nav;
+}

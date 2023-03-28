@@ -13,13 +13,13 @@ export default function ClubList() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const FetchClubs = async () => {
     const response = await fetch(`http://localhost:3001/clubs`);
     const data = await response.json();
     if (data) {
-        setClubs(data);
+      setClubs(data);
     }
   };
 
@@ -41,8 +41,8 @@ export default function ClubList() {
   }, [utilisateur]);
 
   useEffect(() => {
-    if ( clubs || clubs.length !== 0) {
-        FetchClubs();
+    if (!clubs || clubs.length === 0) {
+      FetchClubs();
     }
   }, []);
 
@@ -50,22 +50,29 @@ export default function ClubList() {
     localStorage.removeItem("Id");
   };
 
-  const DeleteClubHandler=async (e,club)=> {
+  const DeleteClubHandler = async (e, club) => {
     e.preventDefault();
     await fetch(`http://localhost:3001/clubs/delete/${club._id}`, {
-      method: "DELETE"
+      method: "DELETE",
     });
     window.location.reload();
     toast.success("Club deleted successfully", {
       duration: 3000,
     });
-  }
+  };
 
-  const UpdateClubHandler=async (e,club) => {
+  const UpdateClubHandler = async (e, club) => {
     e.preventDefault();
-    localStorage.setItem("ClubId",club._id); 
-    navigate("/UpdateClub"); 
- }
+    localStorage.setItem("ClubId", club._id);
+    navigate("/UpdateClub");
+  };
+
+
+  const ViewMembersHandler=async(e,club)=> {
+    e.preventDefault();
+    localStorage.setItem("ClubId", club._id);
+    navigate("/ClubMembers");
+  }
 
   const NavBarUser = (
     <div id="content-wrapper" className="d-flex flex-column">
@@ -366,13 +373,24 @@ export default function ClubList() {
                   <Card.Title>Club Name: {club.name}</Card.Title>
                   <Card.Text>Club Description: {club.description}</Card.Text>
                   <Card.Text>Club Address: {club.address}</Card.Text>
-                  <Button variant="primary" onClick={(e)=>UpdateClubHandler(e,club)}>Update</Button>
+                  <Button
+                    variant="primary"
+                    onClick={(e) => UpdateClubHandler(e, club)}
+                  >
+                    Update
+                  </Button>
                   <button
                     class="btn btn-danger btn-circle"
                     style={{ marginLeft: "5px" }}
-                    onClick={(e)=>DeleteClubHandler(e,club)}
+                    onClick={(e) => DeleteClubHandler(e, club)}
                   >
                     <i class="fas fa-trash"></i>
+                  </button>
+                  <button  class="btn btn-secondary btn-icon-split" style={{marginTop:"5px"}} onClick={(e)=>ViewMembersHandler(e,club)}>
+                    <span class="icon text-white-50">
+                      <i class="fas fa-arrow-right"></i>
+                    </span>
+                    <span class="text">View Members</span>
                   </button>
                 </Card.Body>
               </Card>
@@ -380,7 +398,7 @@ export default function ClubList() {
           ))
         ) : (
           <div className="container-fluid">
-            <div className="text-center" style={{marginTop:"90px"}}>
+            <div className="text-center" style={{ marginTop: "90px" }}>
               <div className="error mx-auto" data-text="404">
                 404
               </div>
@@ -389,7 +407,7 @@ export default function ClubList() {
                 It looks like you should add some clubs...
               </p>
               <NavLink to="/Dash">
-              <a>&larr; Back to Dashboard</a>
+                <a>&larr; Back to Dashboard</a>
               </NavLink>
             </div>
           </div>

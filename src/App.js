@@ -16,6 +16,9 @@ import NotFound from "./components/NotFound";
 import AddClub from "./Club/AddClub";
 import ClubList from "./Club/ClubList";
 import UpdateClub from "./Club/UpdateClub";
+import ClubMembers from "./Club/ClubMembers";
+import Clubs from "./Club/User/Clubs";
+import ValidatePayment from "./Club/User/ValidatePayment";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -44,6 +47,9 @@ function App() {
             <Route path="/AddClub" element={<AddClub/>}></Route>
             <Route path="/Clubs" element={<ClubList />}></Route>
             <Route path="/UpdateClub" element={<UpdateClub />} />
+            <Route  path="/ClubMembers" element={<ClubMembers />} />
+            <Route  path="/payment" element={<Clubs />} />
+            <Route path="/ValidatePayment" element={<ValidatePayment />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
           {/* <About/> */}
