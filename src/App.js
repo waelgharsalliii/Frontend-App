@@ -19,6 +19,7 @@ import UpdateClub from "./Club/UpdateClub";
 import ClubMembers from "./Club/ClubMembers";
 import Clubs from "./Club/User/Clubs";
 import ValidatePayment from "./Club/User/ValidatePayment";
+import MyClubs from "./Club/User/MyClubs";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -50,6 +51,7 @@ function App() {
             <Route  path="/ClubMembers" element={<ClubMembers />} />
             <Route  path="/payment" element={<Clubs />} />
             <Route path="/ValidatePayment" element={<ValidatePayment />} />
+            <Route path="/MyClubs" element={<MyClubs />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
           {/* <About/> */}

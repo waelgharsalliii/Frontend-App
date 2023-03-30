@@ -315,3 +315,23 @@ margin-bottom: 10px;
   margin-top:100px;
   margin-left: 5px;
 }
+
+
+.list-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.list-group-item {
+  flex-basis: calc(33.33% - 30px);
+  margin: 15px;
+  border: 1px solid rgb(234, 234, 234);
+  border-radius: 0px;
+  box-shadow: rgba(49, 49, 49, 0.24) 0px 1px 4px;
+  background-color: rgb(255, 255, 255);
+  padding: 20px;
+}
+
+
+

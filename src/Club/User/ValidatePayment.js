@@ -70,9 +70,9 @@ export default function ValidatePayment() {
             <a href="" className="nav-item nav-link">
               Events
             </a>
-            <a href="" className="nav-item nav-link">
+            <NavLink to="/payment" className="nav-item nav-link">
               Clubs
-            </a>
+            </NavLink>
             <div className="nav-item dropdown">
               <a
                 href="#"

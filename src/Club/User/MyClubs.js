@@ -1,27 +1,16 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import Footer from "../../components/Footer";
 import "../../styles/Register.css";
-import Card from "react-bootstrap/Card";
-import { toast, Toaster } from "react-hot-toast";
 
-export default function Clubs() {
-  const [clubs, setClubs] = useState([]);
+export default function MyClubs() {
   const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  const navigate = useNavigate();
-  const [paymentWindow,setPaymentWindow]=useState(null);
-
-  const FetchClubs = async () => {
-    const response = await fetch(`http://localhost:3001/clubs`);
-    const data = await response.json();
-    if (data) {
-      setClubs(data);
-    }
-  };
+  const [clubs, setClubs] = useState([]);
+  const [clubIds,setClubIds]=useState([]);
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -29,13 +18,20 @@ export default function Clubs() {
       .then((response) => response.json())
       .then((data) => {
         setUser(data);
+        setClubIds(data.clubs);
       });
-    if (!clubs || clubs.length === 0) {
-      FetchClubs();
-    }
   }, []);
 
 
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch(`http://localhost:3001/clubs`);
+      const data = await response.json();
+      setClubs(data.filter((club) => clubIds.includes(club._id)));
+    }
+  
+    fetchData();
+  }, [clubIds]);
 
   useEffect(() => {
     if (user) {
@@ -45,54 +41,11 @@ export default function Clubs() {
     }
   }, [user]);
 
-  
-
   const LogoutHandler = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("Id");
   };
-
-  const PaymentHandler = async (e, club) => {
-    e.preventDefault();
-    const Id = localStorage.getItem("Id");
-    if (user.clubs.includes(club._id)) {
-      toast.error("you have already joined this club");
-      return;
-    } else {
-      const response = await fetch(
-        `http://localhost:3001/api/${club._id}/${Id}/payment`,
-        { method: "POST" }
-      );
-      const data = await response.json();
-      const paymentId = data.result.link.substring(
-        data.result.link.lastIndexOf("/") + 1
-      );
-      localStorage.setItem("paymentId", paymentId);
-      localStorage.setItem("ClubId", club._id);
-      if (response.ok) {
-        setPaymentWindow(window.open(data.result.link));
-      }
-    }
-  };
-
-    const WindowHandler=(e)=> {
-        e.preventDefault();
-        paymentWindow.close();
-        navigate("/ValidatePayment");
-    }
-
-
-  const LeaveClubHandler=async (e,club)=> {
-    e.preventDefault();
-    const Id=localStorage.getItem("Id");
-    await fetch(
-      `http://localhost:3001/clubs/${club._id}/${Id}/leave`,
-      { method: "DELETE" }
-    );
-    toast.success(`You have just left the club ${club.name}`);
-    window.location.reload();
-  }  
 
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
@@ -122,7 +75,7 @@ export default function Clubs() {
             <a href="" className="nav-item nav-link">
               Events
             </a>
-            <NavLink to="/payment"  className="nav-item nav-link">
+            <NavLink to="/payment" className="nav-item nav-link">
               Clubs
             </NavLink>
             <div className="nav-item dropdown">
@@ -225,64 +178,27 @@ export default function Clubs() {
 
   return (
     <div>
-      {" "}
       {NavBarUser}
-      <div style={{display:"flex",justifyContent:"flex-end"}}>
-      <NavLink to="/MyClubs" style={{color:"#0056d2",fontFamily:"Source Sans Pro",fontWeight:"700",fontSize:"1rem"}}>View my clubs</NavLink>
-      <ion-icon name="arrow-forward-outline" style={{color:"#0056d2",paddingTop:"3px"}}></ion-icon>
-      </div>
-      <Toaster position="top-center" reverseOrder={false} />
-      <div className="welcome-message">
-        <h1>
-          Welcome to our club community! We're thrilled to have you here. Here's
-          a list of the clubs you can explore and join
-        </h1>
-      </div>
       {clubs && clubs.length > 0 ? (
         clubs.map((club) => (
-          <div className="div1">
-            <Card style={{ width: "18rem", marginRight: "10px" }}>
-              <Card.Img
-                variant="top"
+          <ListGroup key={club.id}>
+            {" "}
+            {/* add key prop here */}
+            <ListGroupItem>
+              <img
                 src={process.env.PUBLIC_URL + `/img/${club.logo}`}
+                alt={"logo"}
+                className="mr-3"
+                width={64}
+                height={64}
               />
-              <Card.Body>
-                <Card.Title>Club Name: {club.name}</Card.Title>
-                <Card.Text>Club Description: {club.description}</Card.Text>
-                <Card.Text>Club Address: {club.address}</Card.Text>
-                <button
-                  className="btn btn-secondary btn-icon-split"
-                  style={{ marginTop: "5px" }}
-                  onClick={(e) => PaymentHandler(e, club)}
-                >
-                  <span className="icon text-white-50">
-                    <i className="fas fa-arrow-right"></i>
-                  </span>
-                  <span className="text">Pay now</span>
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={(e) => WindowHandler(e, club)}
-                >
-                  <span className="icon text-white-50">
-                    <i class="fas fa-flag"></i>
-                  </span>
-                  <span className="text" style={{ paddingLeft: "5px" }}>
-                    Close Payment Window
-                  </span>
-                </button>
-                <button  class="btn btn-primary btn-icon-split" style={{marginTop:"5px"}} 
-                disabled={!user.clubs.includes(club._id)}
-                onClick={(e)=>LeaveClubHandler(e,club)}
-                >
-                  <span class="icon text-white-50">
-                    <i class="fas fa-info-circle"></i>
-                  </span>
-                  <span class="text">Leave Club</span>
-                </button>
-              </Card.Body>
-            </Card>
-          </div>
+              <div className="d-flex w-50 justify-content-between">
+                <h5 className="mb-1">Club Name: {club.name}</h5>
+              </div>
+              <p className="mb-1">Club Description: {club.description}</p>
+              <p className="mb-1">Club Address: {club.address}</p>
+            </ListGroupItem>
+          </ListGroup>
         ))
       ) : (
         <div className="container-fluid">
@@ -292,10 +208,10 @@ export default function Clubs() {
             </div>
             <p className="lead text-gray-800 mb-5">No Clubs Found</p>
             <p className="text-gray-500 mb-0">
-              It looks like you should get the hell out of here...
+            it looks like you haven't joined any clubs ...
             </p>
-            <NavLink to="/home">
-              <a>&larr; Back to Home</a>
+            <NavLink to="/payment">
+              <a>&larr; Back to the list of clubs</a>
             </NavLink>
           </div>
         </div>
