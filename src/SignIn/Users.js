@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Sidebar from "../AdminDash/Sidebar";
 import "../styles/Register.css";
-import AdminFooter from "../AdminDash/AdminFooter";
 import { toast, Toaster } from "react-hot-toast";
 import ReactPaginate from "react-paginate";
 
@@ -459,7 +458,6 @@ const Users = () => {
           </div>
         )}
       </div>
-      <AdminFooter />
     </div>
   );
 

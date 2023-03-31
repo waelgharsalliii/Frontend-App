@@ -20,6 +20,8 @@ import ClubMembers from "./Club/ClubMembers";
 import Clubs from "./Club/User/Clubs";
 import ValidatePayment from "./Club/User/ValidatePayment";
 import MyClubs from "./Club/User/MyClubs";
+import AddEvent from "./Event/AddEvent";
+import EventList from "./Event/EventList";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -52,6 +54,8 @@ function App() {
             <Route  path="/payment" element={<Clubs />} />
             <Route path="/ValidatePayment" element={<ValidatePayment />} />
             <Route path="/MyClubs" element={<MyClubs />} />
+            <Route  path="/AddEvent" element={<AddEvent />} />
+            <Route path="/Events" element={<EventList />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
           {/* <About/> */}

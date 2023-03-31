@@ -31,12 +31,8 @@ export default function Sidebar() {
                 <div id="collapsePages" className="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div className="bg-white py-2 collapse-inner rounded">
                         <h6 className="collapse-header">Login Screens:</h6>
-                        <NavLink to="/Login">
-                        <a className="collapse-item">Login</a>
-                        </NavLink>
-                        <NavLink to="/Reset">
-                        <a className="collapse-item">Forgot Password</a>
-                        </NavLink>
+                        <NavLink to="/Login" className="collapse-item">Login</NavLink>
+                        <NavLink to="/Reset" className="collapse-item">Forgot Password</NavLink>
                         </div>
                 </div>
             </li>
@@ -51,22 +47,27 @@ export default function Sidebar() {
                 <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div className="bg-white py-2 collapse-inner rounded">
-                        <h6 className="collapse-header">Custom Utilities:</h6>
-                        <NavLink to="/AddClub">
-                        <a className="collapse-item">Add a club</a>
-                        </NavLink>
-                        <NavLink to="/Clubs">
-                        <a className="collapse-item">View All Clubs</a>
-                        </NavLink>
+                        <h6 className="collapse-header">Custom Clubs:</h6>
+                        <NavLink to="/AddClub" className="collapse-item">Add a club</NavLink>
+                        <NavLink to="/Clubs" className="collapse-item">View All Clubs</NavLink>
                     </div>
                 </div>
             </li>
 
             
             <li className="nav-item">
-                <a className="nav-link" href="tables.html">
+                <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+                    aria-controls="collapseTwo">
                     <i className="fas fa-fw fa-table"></i>
                     <span>Events</span></a>
+                    <div id="collapseTwo" className="collapse show" aria-labelledby="headingTwo"
+                    data-parent="#accordionSidebar">
+                    <div className="bg-white py-2 collapse-inner rounded">
+                        <h6 className="collapse-header">Custom Events:</h6>
+                        <NavLink className="collapse-item active" to="/AddEvent">Add an Event</NavLink>
+                        <NavLink className="collapse-item" to="/Events">View All Events</NavLink>
+                    </div>
+                </div>
             </li>
 
             

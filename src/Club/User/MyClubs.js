@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { toast, Toaster } from "react-hot-toast";
 import { NavLink } from "react-router-dom";
 import Footer from "../../components/Footer";
 import "../../styles/Register.css";
@@ -46,6 +47,18 @@ export default function MyClubs() {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("Id");
   };
+
+
+  const LeaveClubHandler=async (e,club)=> {
+    e.preventDefault();
+    const Id=localStorage.getItem("Id");
+    await fetch(
+      `http://localhost:3001/clubs/${club._id}/${Id}/leave`,
+      { method: "DELETE" }
+    );
+    toast.success(`You have just left the club ${club.name}`);
+    window.location.reload();
+  }
 
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
@@ -179,6 +192,7 @@ export default function MyClubs() {
   return (
     <div>
       {NavBarUser}
+      <Toaster position="top-center" reverseOrder={false} />
       {clubs && clubs.length > 0 ? (
         clubs.map((club) => (
           <ListGroup key={club.id}>
@@ -197,6 +211,17 @@ export default function MyClubs() {
               </div>
               <p className="mb-1">Club Description: {club.description}</p>
               <p className="mb-1">Club Address: {club.address}</p>
+              <div style={{ display: "flex",justifyContent:"flex-end" }}>
+        <button
+          class="btn btn-primary btn-icon-split"
+          onClick={(e) => LeaveClubHandler(e, club)}
+        >
+          <span class="icon text-white-50">
+            <i class="fas fa-info-circle"></i>
+          </span>
+          <span class="text">Leave Club</span>
+        </button>
+      </div>
             </ListGroupItem>
           </ListGroup>
         ))

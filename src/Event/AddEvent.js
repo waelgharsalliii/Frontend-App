@@ -1,107 +1,45 @@
-import React, { useState } from "react";
-import Sidebar from "../AdminDash/Sidebar";
-import styled from "styled-components";
-import "../styles/Register.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import React from "react";
+import { useState } from "react";
 import { useEffect } from "react";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { toast, Toaster } from "react-hot-toast";
+import { NavLink, useNavigate } from "react-router-dom";
+import Sidebar from "../AdminDash/Sidebar";
+import "../styles/Register.css";
 
-const MainContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-  top: 90px;
-  left: 200px;
-  width: 100%;
-  max-width: 700px;
-  max-height: 500px;
-  overflow-y: scroll;
-  background: #f0e3f0;
-  border-radius: 10px;
-  color: #4b0082;
-  text-transform: uppercase;
-  letter-spacing: 0.4rem;
-  /* Media queries */
-  @media only screen and (max-width: 1123px) {
-    top: 100px;
-    left: 50px;
-    max-width: 90%;
-  }
-  @media only screen and (max-width: 768px) {
-    top: 50px;
-    left: 50px;
-    max-width: 90%;
-  }
-  @media only screen and (max-width: 480px) {
-    top: 20px;
-    left: 20px;
-    right:20px;
-    max-width: 95%;
-    letter-spacing: 0.2rem;
-  }
-`;
-
-
-const WelcomeText = styled.h2`
-  margin: 20px 3rem 20px 20px;
-`;
-
-export default function AddClub() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [address,setAddress]=useState("");
-  const [logo,setLogo]=useState(null);
+export default function AddEvent() {
   const [utilisateur, setUtilisateur] = useState([]);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
+  const [clubs, setClubs] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
+  const [fee, setFee] = useState("");
+  const [numPlaces,setNumPlaces]=useState("");
+  const [organizer,setOrganizer]=useState("");
   const navigate=useNavigate();
 
-
-
-  const handleLogoChange = (event) => {
-    setLogo(event.target.files[0]);
+  const FetchClubs = async () => {
+    const response = await fetch(`http://localhost:3001/clubs`);
+    const data = await response.json();
+    if (data) {
+      setClubs(data);
+    }
   };
 
-
-
-
+  useEffect(() => {
+    if (!clubs || clubs.length === 0) {
+      FetchClubs();
+    }
+  }, []);
 
   const LogoutHandler = () => {
     localStorage.removeItem("Id");
   };
-
-
-  const AddClubHandler = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("address", address);
-    if (logo) {
-      formData.append("logo", logo, logo.name);
-    }
-  
-    try {
-      const response = await fetch(`http://localhost:3001/clubs/add`, {
-        method: "POST",
-        body: formData,
-      });
-  
-  
-      if (!response.ok) {
-        throw new Error("Failed to add club");
-      }
-      toast.success("Club Added");
-      setTimeout(() => navigate("/Clubs"), 2000);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add club");
-    }
-  };
-  
-  
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -120,7 +58,37 @@ export default function AddClub() {
     }
   }, [utilisateur]);
 
+
+  const AddEventHandler=async (e)=> {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:3001/events/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          location,
+          date,
+          fee,
+          numPlaces,
+          organizer
+        }),
+      });
   
+  
+      if (!response.ok) {
+        throw new Error("Failed to add event");
+      }
+      toast.success("Event Added");
+      setTimeout(() => navigate("/home"), 2000);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add event");
+    }
+  } 
 
   const NavBarUser = (
     <div id="content-wrapper" className="d-flex flex-column">
@@ -409,56 +377,77 @@ export default function AddClub() {
             </li>
           </ul>
         </nav>
-        <MainContainer>
-          <WelcomeText>add a club</WelcomeText>
-          <form onSubmit={AddClubHandler}>
-            <div className="form-group">
-              <label>Name </label>
-              <input
+        <div className="event-container">
+          <h2 className="event-title">Add an Event</h2>
+          <Form className="EventForm" onSubmit={AddEventHandler}>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Title</Form.Label>
+              <Form.Control
                 type="text"
-                placeholder="Enter club name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="Club"
-                id="name"
+                placeholder="Enter Event Title"
+                className="EventControl"
+                onChange={(e) => setTitle(e.target.value)}
               />
-            </div>
-            <div className="form-group">
-              <label>Description </label>
-              <textarea
-                placeholder="Enter club description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                id="description"
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Description</Form.Label>
+              <textarea type="text" placeholder="Write a brief description" 
+              onChange={(e) => setDescription(e.target.value)}/>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Date</Form.Label>
+              <Form.Control
+                type="date"
+                placeholder="Enter Event Date"
+                className="EventControl"
+                onChange={(e) => setDate(e.target.value)}
               />
-            </div>
-            <div className="form-group">
-              <label>Address</label>
-              <input
-                placeholder="Enter club address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="Club"
-                id="address"
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Location</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter Event Location"
+                className="EventControl"
+                onChange={(e) => setLocation(e.target.value)}
               />
-            </div>
-            <div className="form-group">
-              <label>Logo</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleLogoChange}
-                id="logo"
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Fee</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter Event Fee"
+                className="EventControl"
+                onChange={(e) => setFee(e.target.value)}
               />
-            </div>
-            <button  className="btn btn-success btn-icon-split" type="submit">
-              <span className="icon text-white-50">
-                <i className="fas fa-check"></i>
-              </span>
-              <span className="text">Add</span>
-            </button>
-          </form>
-        </MainContainer>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">NbrPlaces</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="NbrPlaces"
+                className="EventControl"
+                onChange={(e) => setNumPlaces(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Organizer</Form.Label>
+              <select className="EventControl" onChange={(e) => setOrganizer(e.target.value)}>
+                <option value="0">Select Organizer</option>
+                {clubs.map((club) => (
+                  <option key={club._id} value={club._id}>
+                    {club.name}
+                  </option>
+                ))}
+              </select>
+            </Form.Group>
+
+            <Button variant="primary" type="submit" className="EventButton">
+              Submit
+            </Button>
+          </Form>
+        </div>
       </div>
     </div>
   );

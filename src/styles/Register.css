@@ -333,5 +333,109 @@ margin-bottom: 10px;
   padding: 20px;
 }
 
+.EventForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 100px;
+}
+
+.mb-3 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.EventLabel {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.EventControl {
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  font-size: 16px;
+  color: #333;
+}
+
+.EventControl:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 5px #6c63ff;
+}
+
+.text-muted {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #999;
+}
+
+
+.EventButton[type="submit"] {
+  background-color: #6c63ff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.EventButton[type="submit"]:hover {
+  background-color: #554de8;
+}
+
+
+.event-container {
+  border: 1px solid #ddd;
+  box-shadow: 0px 0px 10px #ddd;
+  padding: 20px;
+  margin-top: 100px;
+}
+
+.event-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px 0;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+
+@media screen and (min-width: 768px) {
+  .mb-3 {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .EventLabel {
+    flex-basis: 20%;
+    text-align: right;
+    margin-right: 20px;
+    margin-left: 10px;
+  }
+
+  .EventControl {
+    flex-basis: 80%;
+    width: auto;
+  }
+}
+
+
+
+
+
+
+
 
 

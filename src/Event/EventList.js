@@ -1,107 +1,38 @@
-import React, { useState } from "react";
-import Sidebar from "../AdminDash/Sidebar";
-import styled from "styled-components";
-import "../styles/Register.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import React from "react";
 import { useEffect } from "react";
-import { toast, Toaster } from "react-hot-toast";
+import { useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { NavLink } from "react-router-dom";
+import Sidebar from "../AdminDash/Sidebar";
+import Card from "react-bootstrap/Card";
+import { format } from "date-fns";
 
-const MainContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-  top: 90px;
-  left: 200px;
-  width: 100%;
-  max-width: 700px;
-  max-height: 500px;
-  overflow-y: scroll;
-  background: #f0e3f0;
-  border-radius: 10px;
-  color: #4b0082;
-  text-transform: uppercase;
-  letter-spacing: 0.4rem;
-  /* Media queries */
-  @media only screen and (max-width: 1123px) {
-    top: 100px;
-    left: 50px;
-    max-width: 90%;
-  }
-  @media only screen and (max-width: 768px) {
-    top: 50px;
-    left: 50px;
-    max-width: 90%;
-  }
-  @media only screen and (max-width: 480px) {
-    top: 20px;
-    left: 20px;
-    right:20px;
-    max-width: 95%;
-    letter-spacing: 0.2rem;
-  }
-`;
-
-
-const WelcomeText = styled.h2`
-  margin: 20px 3rem 20px 20px;
-`;
-
-export default function AddClub() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [address,setAddress]=useState("");
-  const [logo,setLogo]=useState(null);
+export default function EventList() {
   const [utilisateur, setUtilisateur] = useState([]);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  const navigate=useNavigate();
-
-
-
-  const handleLogoChange = (event) => {
-    setLogo(event.target.files[0]);
-  };
-
-
-
-
+  const [events, setEvents] = useState([]);
 
   const LogoutHandler = () => {
     localStorage.removeItem("Id");
   };
 
 
-  const AddClubHandler = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("address", address);
-    if (logo) {
-      formData.append("logo", logo, logo.name);
-    }
-  
-    try {
-      const response = await fetch(`http://localhost:3001/clubs/add`, {
-        method: "POST",
-        body: formData,
-      });
-  
-  
-      if (!response.ok) {
-        throw new Error("Failed to add club");
-      }
-      toast.success("Club Added");
-      setTimeout(() => navigate("/Clubs"), 2000);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add club");
+  const FetchEvents = async () => {
+    const response = await fetch(`http://localhost:3001/events`);
+    const data = await response.json();
+    if (data) {
+      setEvents(data);
     }
   };
-  
-  
+
+
+  useEffect(() => {
+    if (!events || events.length === 0) {
+      FetchEvents();
+    }
+  }, []);
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -119,8 +50,6 @@ export default function AddClub() {
       setProfilePic(utilisateur.profilePic);
     }
   }, [utilisateur]);
-
-  
 
   const NavBarUser = (
     <div id="content-wrapper" className="d-flex flex-column">
@@ -409,56 +338,38 @@ export default function AddClub() {
             </li>
           </ul>
         </nav>
-        <MainContainer>
-          <WelcomeText>add a club</WelcomeText>
-          <form onSubmit={AddClubHandler}>
-            <div className="form-group">
-              <label>Name </label>
-              <input
-                type="text"
-                placeholder="Enter club name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="Club"
-                id="name"
-              />
+        {events && events.length > 0 ? (
+          events.map((event) => (
+            <div className="div1">
+              <Card style={{ width: "18rem", marginRight: "10px" }}>
+                <Card.Body>
+                  <Card.Title>Event Title: {event.title}</Card.Title>
+                  <Card.Text>Event Description: {event.description}</Card.Text>
+                  <Card.Text>Event Date: {format(new Date(event.date), "yyyy-MM-dd")}</Card.Text>
+                  <Card.Text>Event Location: {event.location}</Card.Text>
+                  <Card.Text>Event fee: {event.fee}</Card.Text>
+                  <Card.Text>Event NbrPlaces: {event.numPlaces}</Card.Text>
+                  <Card.Text>Event Organizer: {event.organizer}</Card.Text>
+                </Card.Body>
+              </Card>
             </div>
-            <div className="form-group">
-              <label>Description </label>
-              <textarea
-                placeholder="Enter club description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                id="description"
-              />
+          ))
+        ) : (
+          <div className="container-fluid">
+            <div className="text-center" style={{ marginTop: "90px" }}>
+              <div className="error mx-auto" data-text="404">
+                404
+              </div>
+              <p className="lead text-gray-800 mb-5">No Events Found</p>
+              <p className="text-gray-500 mb-0">
+                It looks like you should add some events...
+              </p>
+              <NavLink to="/Dash">
+                <a>&larr; Back to Dashboard</a>
+              </NavLink>
             </div>
-            <div className="form-group">
-              <label>Address</label>
-              <input
-                placeholder="Enter club address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="Club"
-                id="address"
-              />
-            </div>
-            <div className="form-group">
-              <label>Logo</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleLogoChange}
-                id="logo"
-              />
-            </div>
-            <button  className="btn btn-success btn-icon-split" type="submit">
-              <span className="icon text-white-50">
-                <i className="fas fa-check"></i>
-              </span>
-              <span className="text">Add</span>
-            </button>
-          </form>
-        </MainContainer>
+          </div>
+        )}
       </div>
     </div>
   );

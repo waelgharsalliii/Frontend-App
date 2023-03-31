@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import AdminFooter from './AdminFooter';
+
 
 
 export default function Content() {
@@ -320,7 +320,6 @@ export default function Content() {
       </div>
     </div>
         </div>
-        <AdminFooter />
         </div>
   )
 }
