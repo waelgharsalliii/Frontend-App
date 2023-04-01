@@ -83,7 +83,7 @@ export default function AddEvent() {
         throw new Error("Failed to add event");
       }
       toast.success("Event Added");
-      setTimeout(() => navigate("/home"), 2000);
+      setTimeout(() => navigate("/Events"), 2000);
     } catch (error) {
       console.error(error);
       toast.error("Failed to add event");

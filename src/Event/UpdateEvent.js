@@ -1,28 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
 import Sidebar from "../AdminDash/Sidebar";
-import "../styles/Register.css";
-import { toast, Toaster } from "react-hot-toast";
-import ReactPaginate from "react-paginate";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { format } from "date-fns";
 
-const Users = () => {
-  const [data, setData] = useState([]);
+export default function UpdateEvent() {
   const [utilisateur, setUtilisateur] = useState([]);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  const navigate = useNavigate();
-  const itemsPerPage = 2;
-  const [currentPage, setCurrentPage] = useState(1);
-  const offset = (currentPage - 1) * itemsPerPage;
-  const currentPageData = data.slice(offset, offset + itemsPerPage);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
+  const [fee, setFee] = useState("");
+  const [numPlaces,setNumPlaces]=useState("");
+  const [organizer,setOrganizer]=useState("");
+  const [clubs, setClubs] = useState([]);
+  const [event,setEvent]=useState(null);
+  const navigate=useNavigate();
+  const EventId=localStorage.getItem("EventId"); 
 
-  const fetchData = async () => {
-    const response = await fetch(`http://localhost:3001/users`);
-    const data = await response.json();
-    setData(data.filter((user) => !user.isAdmin));
+  const LogoutHandler = () => {
+    localStorage.removeItem("Id");
   };
+
+
+  useEffect(() => {
+    const fetchEvent = async () => { 
+      const response = await fetch(`http://localhost:3001/events/${EventId}`,{
+        method:"GET"
+      });
+      const data = await response.json();
+      setEvent(data);
+    };
+    fetchEvent();
+  }, []);
+
+  useEffect(() => {
+    if (event) {
+      setTitle(event.title);
+      setDescription(event.description);
+      setDate(format(new Date(event.date), "yyyy-MM-dd"));
+      setLocation(event.location);
+      setFee(event.fee);
+      setNumPlaces(event.numPlaces);
+      setOrganizer(event.organizer);
+    }
+  }, [event]);
+
+
+
+  const FetchClubs = async () => {
+    const response = await fetch(`http://localhost:3001/clubs`);
+    const data = await response.json();
+    if (data) {
+      setClubs(data);
+    }
+  };
+
+
+  useEffect(() => {
+    if (!clubs || clubs.length === 0) {
+      FetchClubs();
+    }
+  }, []);
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -31,7 +77,6 @@ const Users = () => {
       .then((data) => {
         setUtilisateur(data);
       });
-    fetchData();
   }, []);
 
   useEffect(() => {
@@ -42,52 +87,51 @@ const Users = () => {
     }
   }, [utilisateur]);
 
-  const LogoutHandler = () => {
-    localStorage.removeItem("Id");
-  };
 
-  const DeleteHandler = async (e, user) => {
+  const UpdateEventHandler=async (e)=> {
     e.preventDefault();
-    await fetch(`http://localhost:3001/users/${user._id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-    window.location.reload();
-    toast.success("User deleted successfully", {
-      duration: 3000,
-    });
-  };
+    try {
+        const response = await fetch(`http://localhost:3001/events/${EventId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            location,
+            date,
+            fee,
+            numPlaces,
+            organizer
+          }),
+        });
+    
+    
+        if (!response.ok) {
+          throw new Error("Failed to update event");
+        }
+        toast.success("Event Updated");
+        localStorage.removeItem("EventId");
+        setTimeout(() => navigate("/Events"), 2000);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to update event");
+      }
+  }
 
-  const UpdateHandler = (e, user) => {
-    e.preventDefault();
-    localStorage.setItem("Ident", user._id);
-    navigate("/Update");
-  };
 
-  const BanHandler = async (e, user) => {
-    e.preventDefault();
-    await fetch(`http://localhost:3001/users/ban/${user._id}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    toast.success(`User with email address ${user.email} has been banned`, {
-      duration: 2000,
-    });
-  };
 
-  const UnBanHandler = async (e, user) => {
+  const CancelHandler=(e)=> {
     e.preventDefault();
-    await fetch(`http://localhost:3001/users/unban/${user._id}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    toast.success(`User with email address ${user.email} has been unbanned`, {
-      duration: 2000,
-    });
-  };
+    localStorage.removeItem("EventId");
+    navigate("/Events");
+  }
+
 
   const NavBarUser = (
     <div id="content-wrapper" className="d-flex flex-column">
+      <Toaster position="top-center" reverseOrder={false} />
       <div id="content">
         <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
           <button
@@ -372,92 +416,91 @@ const Users = () => {
             </li>
           </ul>
         </nav>
-        <br />
-        <br />
-        <br />
-        <br />
-        {localStorage.getItem("Id") ? (
-          <div className="table-container">
-            <Toaster position="top-center" reverseOrder={false} />
-            <table>
-              <thead>
-                <tr>
-                  <th className="details">FirstName</th>
-                  <th className="details">LastName</th>
-                  <th className="details">Email</th>
-                  <th className="details">Phone</th>
-                  <th className="details">birthdate</th>
-                  <th className="details">Delete</th>
-                  <th className="details">Update</th>
-                  <th className="details">Ban</th>
-                  <th className="details">Unban</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentPageData.map((user) => (
-                  <tr>
-                    <td>{user.fname}</td>
-                    <td>{user.lname}</td>
-                    <td>{user.email}</td>
-                    <td>{user.phone}</td>
-                    <td>{format(new Date(user.birthdate), "yyyy-MM-dd")}</td>
-                    <td>
-                      <button
-                        className="trash"
-                        onClick={(e) => DeleteHandler(e, user)}
-                      >
-                        <ion-icon name="trash"></ion-icon>
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="refresh"
-                        onClick={(e) => UpdateHandler(e, user)}
-                      >
-                        <ion-icon name="refresh"></ion-icon>
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="ban"
-                        onClick={(e) => BanHandler(e, user)}
-                      >
-                        <ion-icon name="ban-outline"></ion-icon>
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="unban"
-                        onClick={(e) => UnBanHandler(e, user)}
-                      >
-                        <ion-icon name="checkmark-circle-outline"></ion-icon>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <br />
-            {data.length > itemsPerPage && (
-              <ReactPaginate
-                previousLabel={"Previous"}
-                nextLabel={"Next"}
-                pageCount={Math.ceil(data.length / itemsPerPage)}
-                onPageChange={({ selected }) => setCurrentPage(selected + 1)}
-                containerClassName={"pagination"}
-                previousLinkClassName={"page-link"}
-                nextLinkClassName={"page-link"}
-                disabledClassName={"disabled"}
-                activeClassName={"active"}
-                pageLinkClassName={"pagination-link"}
+        <div className="event-container">
+          <h2 className="event-title">Update an Event</h2>
+          <Form className="EventForm" onSubmit={UpdateEventHandler}>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Title</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter Event Title"
+                className="EventControl"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               />
-            )}
-          </div>
-        ) : (
-          <div className="Loading">
-            dear client you should sign in again next time
-          </div>
-        )}
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Description</Form.Label>
+              <textarea
+                type="text"
+                placeholder="Write a brief description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Date</Form.Label>
+              <Form.Control
+                type="date"
+                placeholder="Enter Event Date"
+                className="EventControl"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Location</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter Event Location"
+                className="EventControl"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Fee</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="Enter Event Fee"
+                className="EventControl"
+                value={fee}
+                onChange={(e) => setFee(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">NbrPlaces</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder="NbrPlaces"
+                className="EventControl"
+                value={numPlaces}
+                onChange={(e) => setNumPlaces(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">Organizer</Form.Label>
+              <select
+                className="EventControl"
+                onChange={(e) => setOrganizer(e.target.value)}
+                value={organizer}
+              >
+                <option value="0">Select Organizer</option>
+                {clubs.map((club) => (
+                  <option key={club._id} value={club._id}>
+                    {club.name}
+                  </option>
+                ))}
+              </select>
+            </Form.Group>
+
+            <Button variant="primary" type="submit" className="EventButton">
+              Submit
+            </Button>
+            <button className="btn btn-danger" style={{position:"relative",left:"20px"}} onClick={CancelHandler}>Cancel</button>
+          </Form>
+        </div>
       </div>
     </div>
   );
@@ -465,11 +508,9 @@ const Users = () => {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar></Sidebar>
+        <Sidebar />
         {NavBarUser}
       </div>
     </div>
   );
-};
-
-export default Users;
+}

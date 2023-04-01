@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function UpdateClub() {
   const ClubId = localStorage.getItem("ClubId");
@@ -11,6 +11,7 @@ export default function UpdateClub() {
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
   const [club, setClub] = useState(null);
+  const navigate=useNavigate();
 
   useEffect(() => {
     const fetchClub = async () => {
@@ -58,6 +59,13 @@ export default function UpdateClub() {
       );
     }
   };
+
+
+  const CancelHandler=(e)=> {
+    e.preventDefault();
+    localStorage.removeItem("ClubId");
+    navigate("/Clubs");
+  }
 
   return (
     <div className="bg-gradient-primary">
@@ -133,9 +141,9 @@ export default function UpdateClub() {
                     </button>
                     <hr />
                     <NavLink to="/Clubs">
-                      <a className="btn btn-google btn-user btn-block">
+                      <button className="btn btn-google btn-user btn-block" onClick={CancelHandler}>
                         Cancel
-                      </a>
+                      </button>
                     </NavLink>
                   </form>
                 </div>

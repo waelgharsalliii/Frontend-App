@@ -1,11 +1,12 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Toaster } from "react-hot-toast";
-import { NavLink } from "react-router-dom";
+import { Toaster, toast } from "react-hot-toast";
+import { NavLink, useNavigate } from "react-router-dom";
 import Sidebar from "../AdminDash/Sidebar";
 import Card from "react-bootstrap/Card";
 import { format } from "date-fns";
+import { Button } from "react-bootstrap";
 
 export default function EventList() {
   const [utilisateur, setUtilisateur] = useState([]);
@@ -13,11 +14,12 @@ export default function EventList() {
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const [events, setEvents] = useState([]);
+  const [attendees,setAttendees]=useState(null);
+  const navigate=useNavigate();
 
   const LogoutHandler = () => {
     localStorage.removeItem("Id");
   };
-
 
   const FetchEvents = async () => {
     const response = await fetch(`http://localhost:3001/events`);
@@ -50,6 +52,34 @@ export default function EventList() {
       setProfilePic(utilisateur.profilePic);
     }
   }, [utilisateur]);
+
+
+  const UpdateEventHandler=(e,event)=> {
+    e.preventDefault();
+    localStorage.setItem("EventId",event._id);
+    navigate("/UpdateEvent");
+  }
+
+
+
+  const DeleteEventHandler=async (e,event)=> {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:3001/events/${event._id}`,{
+        method:"DELETE"
+      });
+      if (response.ok) {
+        toast.success("Event deleted successfully");
+        window.location.reload();
+      }
+  }
+
+
+  const ViewAttendeesHandler=(e,event)=> {
+    e.preventDefault();
+    localStorage.setItem("EventId",event._id);
+    navigate("/Attendees");
+  }
+
 
   const NavBarUser = (
     <div id="content-wrapper" className="d-flex flex-column">
@@ -351,6 +381,19 @@ export default function EventList() {
                   <Card.Text>Event NbrPlaces: {event.numPlaces}</Card.Text>
                   <Card.Text>Event Organizer: {event.organizer}</Card.Text>
                 </Card.Body>
+                <Button
+                    variant="info"
+                    onClick={(e)=>UpdateEventHandler(e,event)}
+                    style={{height:"50px",marginBottom:"10px",marginLeft:"10px"}}
+                  >
+                    Update
+                </Button>
+                <button className="btn btn-danger" style={{marginBottom:"10px",width:"250px",marginLeft:"10px"}}
+                onClick={(e)=>DeleteEventHandler(e,event)}
+                >Delete</button>
+                <button className="btn btn-primary" style={{marginRight:"10px",marginBottom:"10px"}}
+                onClick={(e)=>ViewAttendeesHandler(e,event)}
+                >View attendees</button>
               </Card>
             </div>
           ))

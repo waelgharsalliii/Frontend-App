@@ -63,9 +63,9 @@ const Nav = () => {
             <a href="" className="nav-item nav-link">
               About
             </a>
-            <a href="" className="nav-item nav-link">
+            <NavLink to='/EventsList' className="nav-item nav-link">
               Events
-            </a>
+            </NavLink>
             <NavLink to="/payment" className="nav-item nav-link">
               Clubs
             </NavLink>
