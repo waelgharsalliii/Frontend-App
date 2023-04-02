@@ -3,8 +3,6 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Footer from '../../components/Footer';
-import Card from "react-bootstrap/Card";
-import { format } from "date-fns";
 import { Toaster, toast } from 'react-hot-toast';
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
