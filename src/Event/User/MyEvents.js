@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
-import { toast, Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { NavLink } from "react-router-dom";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 import Footer from "../../components/Footer";
-import "../../styles/Register.css";
 
-export default function MyClubs() {
+export default function MyEvents() {
   const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  const [clubs, setClubs] = useState([]);
-  const [clubIds,setClubIds]=useState([]);
+  const [events,setEvents]=useState([]);
+
+
+
+  useEffect(() => {
+    const Id = localStorage.getItem("Id");
+    fetch(`http://localhost:3001/users/${Id}/events`, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => {
+        setEvents(data);
+      });
+  }, []);
+
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -19,20 +29,8 @@ export default function MyClubs() {
       .then((response) => response.json())
       .then((data) => {
         setUser(data);
-        setClubIds(data.clubs);
       });
   }, []);
-
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(`http://localhost:3001/clubs`);
-      const data = await response.json();
-      setClubs(data.filter((club) => clubIds.includes(club._id)));
-    }
-  
-    fetchData();
-  }, [clubIds]);
 
   useEffect(() => {
     if (user) {
@@ -47,18 +45,6 @@ export default function MyClubs() {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("Id");
   };
-
-
-  const LeaveClubHandler=async (e,club)=> {
-    e.preventDefault();
-    const Id=localStorage.getItem("Id");
-    await fetch(
-      `http://localhost:3001/clubs/${club._id}/${Id}/leave`,
-      { method: "DELETE" }
-    );
-    toast.success(`You have just left the club ${club.name}`);
-    window.location.reload();
-  }
 
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
@@ -143,13 +129,13 @@ export default function MyClubs() {
           <div className="row g-5 py-5">
             <div className="col-lg-6 text-center text-lg-start">
               {/* <h1 className="text-white mb-4 animated zoomIn">
-                        All in one SEO tool need to grow your business rapidly
-                      </h1>
-                      <p className="text-white pb-3 animated zoomIn">
-                        Tempor rebum no at dolore lorem clita rebum rebum ipsum rebum
-                        stet dolor sed justo kasd. Ut dolor sed magna dolor sea diam.
-                        Sit diam sit justo amet ipsum vero ipsum clita lorem
-                      </p> */}
+                            All in one SEO tool need to grow your business rapidly
+                          </h1>
+                          <p className="text-white pb-3 animated zoomIn">
+                            Tempor rebum no at dolore lorem clita rebum rebum ipsum rebum
+                            stet dolor sed justo kasd. Ut dolor sed magna dolor sea diam.
+                            Sit diam sit justo amet ipsum vero ipsum clita lorem
+                          </p> */}
             </div>
             <div className="col-lg-6 text-center text-lg-start">
               <img className="img-fluid" src="" alt="" />
@@ -193,35 +179,19 @@ export default function MyClubs() {
     <div>
       {NavBarUser}
       <Toaster position="top-center" reverseOrder={false} />
-      {clubs && clubs.length > 0 ? (
-        clubs.map((club) => (
-          <ListGroup key={club._id}>
+      {events && events.length > 0 ? (
+        events.map((event) => (
+          <ListGroup key={event._id}>
             {" "}
             {/* add key prop here */}
             <ListGroupItem>
-              <img
-                src={process.env.PUBLIC_URL + `/img/${club.logo}`}
-                alt={"logo"}
-                className="mr-3"
-                width={64}
-                height={64}
-              />
               <div className="d-flex w-50 justify-content-between">
-                <h5 className="mb-1">Club Name: {club.name}</h5>
+                <h5 className="mb-1">Event Title: {event.title}</h5>
               </div>
-              <p className="mb-1">Club Description: {club.description}</p>
-              <p className="mb-1">Club Address: {club.address}</p>
-              <div style={{ display: "flex",justifyContent:"flex-end" }}>
-        <button
-          class="btn btn-primary btn-icon-split"
-          onClick={(e) => LeaveClubHandler(e, club)}
-        >
-          <span class="icon text-white-50">
-            <i class="fas fa-info-circle"></i>
-          </span>
-          <span class="text">Leave Club</span>
-        </button>
-      </div>
+              <p className="mb-1">Event Description: {event.description}</p>
+              <p className="mb-1">Event Location: {event.location}</p>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              </div>
             </ListGroupItem>
           </ListGroup>
         ))
@@ -231,12 +201,12 @@ export default function MyClubs() {
             <div className="error mx-auto" data-text="404">
               404
             </div>
-            <p className="lead text-gray-800 mb-5">No Clubs Found</p>
+            <p className="lead text-gray-800 mb-5">No Events Found</p>
             <p className="text-gray-500 mb-0">
-            it looks like you haven't joined any clubs ...
+              it looks like you haven't joined any events ...
             </p>
-            <NavLink to="/payment">
-              <a>&larr; Back to the list of clubs</a>
+            <NavLink to="/Events">
+              <a>&larr; Back to the list of events</a>
             </NavLink>
           </div>
         </div>

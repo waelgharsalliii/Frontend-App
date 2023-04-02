@@ -25,6 +25,7 @@ import EventList from "./Event/EventList";
 import UpdateEvent from "./Event/UpdateEvent";
 import Attendees from "./Event/Attendees";
 import Events from "./Event/User/Events";
+import MyEvents from "./Event/User/MyEvents";
 
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
             <Route  path="/UpdateEvent" element={<UpdateEvent />} />
             <Route path="/Attendees" element={<Attendees />} />
             <Route path="/EventsList" element={<Events />} /> 
+            <Route path="/MyEvents" element={<MyEvents />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
           {/* <About/> */}
