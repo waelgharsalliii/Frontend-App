@@ -50,27 +50,20 @@ export default function Clubs() {
   const PaymentHandler = async (e, club) => {
     e.preventDefault();
     const Id = localStorage.getItem("Id");
-    if (user.clubs.includes(club._id)) {
-      toast.error("you have already joined this club");
-      return;
-    } else {
-      const response = await fetch(
-        `http://localhost:3001/api/${club._id}/${Id}/payment`,
-        { method: "POST" }
-      );
-      const data = await response.json();
-      const paymentId = data.result.link.substring(
-        data.result.link.lastIndexOf("/") + 1
-      );
-      localStorage.setItem("paymentId", paymentId);
-      localStorage.setItem("ClubId", club._id);
-      if (response.ok) {
-        window.location.href=data.result.link;
-      }
+    const response = await fetch(
+      `http://localhost:3001/api/${club._id}/${Id}/payment`,
+      { method: "POST" }
+    );
+    const data = await response.json();
+    const paymentId = data.result.link.substring(
+      data.result.link.lastIndexOf("/") + 1
+    );
+    localStorage.setItem("paymentId", paymentId);
+    localStorage.setItem("ClubId", club._id);
+    if (response.ok) {
+      window.location.href = data.result.link;
     }
   };
-
-  
 
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
@@ -245,11 +238,15 @@ export default function Clubs() {
                   className="btn btn-secondary btn-icon-split"
                   style={{ marginTop: "5px" }}
                   onClick={(e) => PaymentHandler(e, club)}
+                  disabled={user.clubs.includes(club._id) ? true : false}
                 >
                   <span className="icon text-white-50">
                     <i className="fas fa-arrow-right"></i>
                   </span>
-                  <span className="text">Join</span>
+                  <span className="text">
+                    {" "}
+                    {user.clubs.includes(club._id) ? "Already Joined" : "Join"}
+                  </span>
                 </button>
               </Card.Body>
             </Card>
