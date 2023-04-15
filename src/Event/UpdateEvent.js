@@ -24,6 +24,7 @@ export default function UpdateEvent() {
   const [event,setEvent]=useState(null);
   const navigate=useNavigate();
   const EventId=localStorage.getItem("EventId"); 
+  const [img,setImg]=useState("");
 
   const LogoutHandler = () => {
     localStorage.removeItem("Id");
@@ -90,21 +91,21 @@ export default function UpdateEvent() {
 
   const UpdateEventHandler=async (e)=> {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("location", location);
+    formData.append("date", date);
+    formData.append("fee", fee);
+    formData.append("numPlaces", numPlaces);
+    formData.append("organizer", organizer);
+    if (img) {
+      formData.append("img", img, img.name);
+    }
     try {
         const response = await fetch(`http://localhost:3001/events/${EventId}`, {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title,
-            description,
-            location,
-            date,
-            fee,
-            numPlaces,
-            organizer
-          }),
+          body:formData,
         });
     
     
@@ -493,6 +494,15 @@ export default function UpdateEvent() {
                   </option>
                 ))}
               </select>
+            </Form.Group>
+            
+            <Form.Group className="mb-3">
+            <Form.Label className="EventLabel">Img</Form.Label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e)=>setImg(e.target.files[0])}
+              />
             </Form.Group>
 
             <Button variant="primary" type="submit" className="EventButton">

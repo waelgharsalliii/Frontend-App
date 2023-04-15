@@ -1,13 +1,13 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer';
-import { Toaster, toast } from 'react-hot-toast';
 import Fullcalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import "../../styles/Register.css";
 
 
 export default function Events() {
@@ -17,6 +17,7 @@ export default function Events() {
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const [events,setEvents]=useState([]);
+  const navigate=useNavigate();
 
 
   useEffect(() => {
@@ -183,27 +184,11 @@ export default function Events() {
 
       const handleEventClick = (arg) => {
         const event = arg.event._def.extendedProps;
-        const EventTitle=arg.event._def.title;
-        const Id = localStorage.getItem("Id");
-        JoinHandler(event, Id,EventTitle);
+        localStorage.setItem("EventId", event._id);
+        navigate("/EventDetails");
       }
     
-      const JoinHandler = async (event, Id,EventTitle) => {
-        try {
-          const response = await fetch(`http://localhost:3001/events/${event.organizer}/${event._id}/join/${Id}`, {
-            method: "POST",
-          });
-          if (response.ok) {
-            toast.success(`You have just joined the event ${EventTitle}`);
-          } else {
-            const errorResponse = await response.json();
-            toast.error(errorResponse.message);
-          }
-        } catch (error) {
-          console.error(error);
-          toast.error("An error occurred while trying to join the event");
-        }
-      }
+      
 
       const handleDateClick = (arg) => {
         const calendarApi = arg.view.calendar;
@@ -216,7 +201,6 @@ export default function Events() {
   return (
     <div>
       {NavBarUser}
-      <Toaster position="top-center" reverseOrder={false} />
        <div style={{ display: "flex", justifyContent: "flex-end",position:"relative",bottom:"100px" }}>
         <NavLink
           to="/MyEvents"
@@ -279,13 +263,18 @@ export default function Events() {
           </div>
         </div>
       )} */}
+      <div className="welcome-message" style={{marginBottom:'100px'}}>
+        <h1>
+        Welcome to our club community! Get ready to embark on an exciting journey of events and activities. Browse our calendar and choose the event that sparks your interest. We can't wait to have you join us!
+        </h1>
+      </div>
       <Fullcalendar 
       plugins={[dayGridPlugin,timeGridPlugin,interactionPlugin]}
       initialView='dayGridMonth'
       headerToolbar={{
         start: 'today prev,next', 
         center: 'title',
-        end: 'dayGridMonth,timeGridWeek,timeGridDay' 
+        end: 'dayGridMonth,timeGridWeek,timeGridDay'
       }}
       height={'90vh'}
       events={events}

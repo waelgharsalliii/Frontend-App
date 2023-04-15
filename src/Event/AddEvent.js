@@ -21,6 +21,7 @@ export default function AddEvent() {
   const [fee, setFee] = useState("");
   const [numPlaces,setNumPlaces]=useState("");
   const [organizer,setOrganizer]=useState("");
+  const [img,setImg]=useState("");
   const navigate=useNavigate();
 
   const FetchClubs = async () => {
@@ -61,21 +62,21 @@ export default function AddEvent() {
 
   const AddEventHandler=async (e)=> {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("location", location);
+    formData.append("date", date);
+    formData.append("fee", fee);
+    formData.append("numPlaces", numPlaces);
+    formData.append("organizer", organizer);
+    if (img) {
+      formData.append("img", img, img.name);
+    }
     try {
       const response = await fetch(`http://localhost:3001/events/add`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          location,
-          date,
-          fee,
-          numPlaces,
-          organizer
-        }),
+        body:formData,
       });
   
   
@@ -393,7 +394,7 @@ export default function AddEvent() {
             <Form.Group className="mb-3">
               <Form.Label className="EventLabel">Description</Form.Label>
               <textarea type="text" placeholder="Write a brief description" 
-              onChange={(e) => setDescription(e.target.value)}/>
+              onChange={(e) => setDescription(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label className="EventLabel">Date</Form.Label>
@@ -441,6 +442,15 @@ export default function AddEvent() {
                   </option>
                 ))}
               </select>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+            <Form.Label className="EventLabel">Img</Form.Label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e)=>setImg(e.target.files[0])}
+              />
             </Form.Group>
 
             <Button variant="primary" type="submit" className="EventButton">

@@ -26,6 +26,7 @@ import UpdateEvent from "./Event/UpdateEvent";
 import Attendees from "./Event/Attendees";
 import Events from "./Event/User/Events";
 import MyEvents from "./Event/User/MyEvents";
+import EventDetails from "./Event/User/EventDetails";
 
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
             <Route path="/MyClubs" element={<MyClubs />} />
             <Route  path="/AddEvent" element={<AddEvent />} />
             <Route path="/Events" element={<EventList />} />
+            <Route path="/EventDetails" element={<EventDetails />} />
             <Route  path="/UpdateEvent" element={<UpdateEvent />} />
             <Route path="/Attendees" element={<Attendees />} />
             <Route path="/EventsList" element={<Events />} /> 

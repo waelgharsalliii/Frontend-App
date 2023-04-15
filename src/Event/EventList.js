@@ -14,7 +14,7 @@ export default function EventList() {
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const [events, setEvents] = useState([]);
-  const [attendees,setAttendees]=useState(null);
+  const [clubs,setClubs]=useState([]);
   const navigate=useNavigate();
 
   const LogoutHandler = () => {
@@ -29,10 +29,23 @@ export default function EventList() {
     }
   };
 
+   const FetchClubs=async ()=> {
+     const response = await fetch(`http://localhost:3001/clubs`,{
+       method:"GET"
+     });
+     const data = await response.json();
+     if (data) {
+       setClubs(data);
+     }
+   }
+
 
   useEffect(() => {
     if (!events || events.length === 0) {
       FetchEvents();
+    }
+    if (clubs || clubs.length===0) {
+      FetchClubs();
     }
   }, []);
 
@@ -368,10 +381,15 @@ export default function EventList() {
             </li>
           </ul>
         </nav>
-        {events && events.length > 0 ? (
+        {events && events.length > 0 && clubs && clubs.length>0 ? (
           events.map((event) => (
             <div className="div1">
               <Card style={{ width: "18rem", marginRight: "10px" }}>
+              <Card.Img
+                  variant="top"
+                  src={process.env.PUBLIC_URL + `/img/${event.img}`}
+                  style={{ width: "200px", height: "auto",marginLeft:"30px" }}
+                />
                 <Card.Body>
                   <Card.Title>Event Title: {event.title}</Card.Title>
                   <Card.Text>Event Description: {event.description}</Card.Text>
@@ -379,7 +397,7 @@ export default function EventList() {
                   <Card.Text>Event Location: {event.location}</Card.Text>
                   <Card.Text>Event fee: {event.fee}</Card.Text>
                   <Card.Text>Event NbrPlaces: {event.numPlaces}</Card.Text>
-                  <Card.Text>Event Organizer: {event.organizer}</Card.Text>
+                  <Card.Text>Event Organizer: Club {clubs.find((club) => club._id === event.organizer).name}</Card.Text>
                 </Card.Body>
                 <Button
                     variant="info"

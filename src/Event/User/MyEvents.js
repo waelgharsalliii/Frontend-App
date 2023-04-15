@@ -185,6 +185,13 @@ export default function MyEvents() {
             {" "}
             {/* add key prop here */}
             <ListGroupItem>
+            <img
+                src={process.env.PUBLIC_URL + `/img/${event.img}`}
+                alt={"img"}
+                className="mr-3"
+                width={64}
+                height={64}
+              />
               <div className="d-flex w-50 justify-content-between">
                 <h5 className="mb-1">Event Title: {event.title}</h5>
               </div>
@@ -205,7 +212,7 @@ export default function MyEvents() {
             <p className="text-gray-500 mb-0">
               it looks like you haven't joined any events ...
             </p>
-            <NavLink to="/Events">
+            <NavLink to="/EventsList">
               <a>&larr; Back to the list of events</a>
             </NavLink>
           </div>

@@ -420,7 +420,7 @@ export default function Attendees() {
                 href=''
                   onClick={(e) => {
                     e.preventDefault();
-                    localStorage.removeItem("ClubId");
+                    localStorage.removeItem("EventId");
                     navigate("/Dash");
                   }}
                 >

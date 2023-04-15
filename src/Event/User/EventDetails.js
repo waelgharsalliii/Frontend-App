@@ -1,36 +1,36 @@
-import React, { useEffect } from "react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Heading,
+  Image,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
+import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "../../components/Footer";
-import "../../styles/Register.css";
-import Card from "react-bootstrap/Card";
-import { toast, Toaster } from "react-hot-toast";
+import { Toaster, toast } from 'react-hot-toast';
 
-export default function Clubs() {
-  const [clubs, setClubs] = useState([]);
+export default function EventDetails() {
+  const [event, setEvent] = useState(null);
   const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
-
-  const FetchClubs = async () => {
-    const response = await fetch(`http://localhost:3001/clubs`);
-    const data = await response.json();
-    if (data) {
-      setClubs(data);
-    }
-  };
+  const Id = localStorage.getItem("Id");
+  const navigate=useNavigate();
 
   useEffect(() => {
-    const Id = localStorage.getItem("Id");
     fetch(`http://localhost:3001/users/${Id}`, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
         setUser(data);
       });
-    if (!clubs || clubs.length === 0) {
-      FetchClubs();
-    }
   }, []);
 
   useEffect(() => {
@@ -47,30 +47,17 @@ export default function Clubs() {
     localStorage.removeItem("Id");
   };
 
-  const PaymentHandler = async (e, club) => {
-    e.preventDefault();
-    const Id = localStorage.getItem("Id");
-    if (user.clubs.includes(club._id)) {
-      toast.error("you have already joined this club");
-      return;
-    } else {
-      const response = await fetch(
-        `http://localhost:3001/api/${club._id}/${Id}/payment`,
-        { method: "POST" }
-      );
-      const data = await response.json();
-      const paymentId = data.result.link.substring(
-        data.result.link.lastIndexOf("/") + 1
-      );
-      localStorage.setItem("paymentId", paymentId);
-      localStorage.setItem("ClubId", club._id);
-      if (response.ok) {
-        window.location.href=data.result.link;
-      }
-    }
-  };
-
-  
+  useEffect(() => {
+    const EventId = localStorage.getItem("EventId");
+    const FetchEvent = async () => {
+      await fetch(`http://localhost:3001/events/${EventId}`, { method: "GET" })
+        .then((response) => response.json())
+        .then((data) => {
+          setEvent(data);
+        });
+    };
+    FetchEvent();
+  }, []);
 
   const NavBarUser = (
     <div className="container-xxl position-relative p-0">
@@ -104,25 +91,28 @@ export default function Clubs() {
               Clubs
             </NavLink>
             <div className="nav-item dropdown">
-              <a
-                href="#"
-                className="nav-link dropdown-toggle"
-                data-bs-toggle="dropdown"
-              >
-                <img
-                  src={`img/${profilePic}`}
-                  alt="Image"
-                  height="35"
-                  width="35"
-                  style={{
-                    borderRadius: "50%",
-                    border: "2px solid #ccc",
-                    boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.2)",
-                    padding: "2px",
-                  }}
-                />{" "}
-                {fname} {lname}
-              </a>
+                <a
+                  href="#"
+                  className="nav-link dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <img
+                    src={`img/${profilePic}`}
+                    alt="Image"
+                    height="40"
+                    width="50"
+                    style={{
+                      borderRadius: "50%",
+                      border: "2px solid #ccc",
+                      boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.2)",
+                      padding: "2px",
+                    }}
+                  />
+                  <span style={{ marginLeft: "8px" }}>
+                    {fname} {lname}
+                  </span>
+                </a>
               <div className="dropdown-menu m-0">
                 <NavLink to="/Profile" className="dropdown-item">
                   Edit Profile
@@ -201,77 +191,72 @@ export default function Clubs() {
     </div>
   );
 
+
+  const JoinHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:3001/events/${event._id}/join/${Id}`, {
+        method: "POST",
+      });
+      if (response.ok) {
+        toast.success(`You have just joined the event ${event.title}`);
+      } else {
+        const errorResponse = await response.json();
+        toast.error(errorResponse.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while trying to join the event");
+    }
+  }
+
+
+  const CancelHandler=(e)=> {
+    e.preventDefault();
+    localStorage.removeItem("EventId");
+    navigate("/EventsList")
+  }
+
   return (
-    <div>
-      {" "}
+    <>
       {NavBarUser}
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <NavLink
-          to="/MyClubs"
-          style={{
-            color: "#0056d2",
-            fontFamily: "Source Sans Pro",
-            fontWeight: "700",
-            fontSize: "1rem",
-          }}
-        >
-          View my clubs
-        </NavLink>
-        <ion-icon
-          name="arrow-forward-outline"
-          style={{ color: "#0056d2", paddingTop: "3px" }}
-        ></ion-icon>
-      </div>
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="welcome-message">
-        <h1>
-          Welcome to our club community! We're thrilled to have you here. Here's
-          a list of the clubs you can explore and join
-        </h1>
-      </div>
-      {clubs && clubs.length > 0 ? (
-        clubs.map((club) => (
-          <div className="div1">
-            <Card style={{ width: "18rem", marginRight: "10px" }}>
-              <Card.Img
-                variant="top"
-                src={process.env.PUBLIC_URL + `/img/${club.logo}`}
-              />
-              <Card.Body>
-                <Card.Title>Club Name: {club.name}</Card.Title>
-                <Card.Text>Club Description: {club.description}</Card.Text>
-                <Card.Text>Club Address: {club.address}</Card.Text>
-                <button
-                  className="btn btn-secondary btn-icon-split"
-                  style={{ marginTop: "5px" }}
-                  onClick={(e) => PaymentHandler(e, club)}
-                >
-                  <span className="icon text-white-50">
-                    <i className="fas fa-arrow-right"></i>
-                  </span>
-                  <span className="text">Join</span>
-                </button>
-              </Card.Body>
-            </Card>
-          </div>
-        ))
+      {event ? (
+        <ChakraProvider>
+          <Card
+            flexDirection={{ base: "column", sm: "row" }}
+            overflow="hidden"
+            variant="outline"
+          >
+            <Image
+              objectFit="cover"
+              maxWidth={{ base: "100%", sm: "200px" }}
+              src={process.env.PUBLIC_URL + `/img/${event.img}`}
+              alt="Caffe Latte"
+            />
+
+            <Stack>
+              <CardBody>
+                <Heading size="md">{event.title}</Heading>
+
+                <Text py="2">{event.description}</Text>
+              </CardBody>
+
+              <CardFooter>
+                <Button variant="solid" colorScheme="blue" onClick={JoinHandler}>
+                  Join
+                </Button>
+                <Button variant="solid" colorScheme="red" onClick={CancelHandler} style={{marginLeft:"20px"}}>
+                  Cancel
+                </Button>
+              </CardFooter>
+            </Stack>
+          </Card>
+        </ChakraProvider>
       ) : (
-        <div className="container-fluid">
-          <div className="text-center" style={{ marginTop: "90px" }}>
-            <div className="error mx-auto" data-text="404">
-              404
-            </div>
-            <p className="lead text-gray-800 mb-5">No Clubs Found</p>
-            <p className="text-gray-500 mb-0">
-              It looks like you should get the hell out of here...
-            </p>
-            <NavLink to="/home">
-              <a>&larr; Back to Home</a>
-            </NavLink>
-          </div>
-        </div>
+        <Text>Loading event details...</Text>
       )}
       <Footer />
-    </div>
+    </>
   );
 }

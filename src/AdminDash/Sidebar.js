@@ -1,9 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import "../styles/Register.css";
+
+
 
 export default function Sidebar() {
   return (
-    <div>
+    <div className='SideBar'>
         <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
