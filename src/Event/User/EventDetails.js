@@ -200,6 +200,7 @@ export default function EventDetails() {
       });
       if (response.ok) {
         toast.success(`You have just joined the event ${event.title}`);
+        setTimeout(() => navigate("/MyEvents"), 3000);
       } else {
         const errorResponse = await response.json();
         toast.error(errorResponse.message);
@@ -216,6 +217,8 @@ export default function EventDetails() {
     localStorage.removeItem("EventId");
     navigate("/EventsList")
   }
+
+  
 
   return (
     <>
@@ -237,14 +240,19 @@ export default function EventDetails() {
 
             <Stack>
               <CardBody>
-                <Heading size="md">{event.title}</Heading>
+                <Heading size="md">Event Title: {event.title}</Heading>
 
-                <Text py="2">{event.description}</Text>
+                <Text py="2">Event Description: {event.description}</Text>
+                <Text py="2">Event Location: {event.location}</Text>
+                <Text py="2">Event Fee: {event.fee}DT</Text>
               </CardBody>
 
               <CardFooter>
-                <Button variant="solid" colorScheme="blue" onClick={JoinHandler}>
-                  Join
+                <Button variant="solid" colorScheme="blue" onClick={JoinHandler}
+                disabled={
+                  true}
+                >
+                {user.events.includes(event._id) ? "Already Joined" : "Join"}
                 </Button>
                 <Button variant="solid" colorScheme="red" onClick={CancelHandler} style={{marginLeft:"20px"}}>
                   Cancel

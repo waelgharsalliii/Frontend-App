@@ -10,6 +10,7 @@ export default function UpdateClub() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
+  const [domain, setDomain] = useState("");
   const [club, setClub] = useState(null);
   const navigate=useNavigate();
 
@@ -28,6 +29,7 @@ export default function UpdateClub() {
       setDescription(club.description);
       setName(club.name);
       setAddress(club.address);
+      setDomain(club.domain);
     }
   }, [club]);
 
@@ -41,6 +43,7 @@ export default function UpdateClub() {
     formData.append("name", name);
     formData.append("description", description);
     formData.append("address", address);
+    formData.append("domain", domain);
     if (logo) {
       formData.append("logo", logo, logo.name);
     }
@@ -119,6 +122,16 @@ export default function UpdateClub() {
                         placeholder="Address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className="form-control form-control-user"
+                        id="exampleInputEmail"
+                        placeholder="Domain"
+                        value={domain}
+                        onChange={(e) => setDomain(e.target.value)}
                       />
                     </div>
                     <div className="form-group row">

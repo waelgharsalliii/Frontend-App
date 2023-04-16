@@ -51,6 +51,7 @@ export default function AddClub() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [address,setAddress]=useState("");
+  const [domain,setDomain]=useState("");
   const [logo,setLogo]=useState(null);
   const [utilisateur, setUtilisateur] = useState([]);
   const [fname, setFname] = useState("");
@@ -79,6 +80,7 @@ export default function AddClub() {
     formData.append("name", name);
     formData.append("description", description);
     formData.append("address", address);
+    formData.append("domain", domain);
     if (logo) {
       formData.append("logo", logo, logo.name);
     }
@@ -440,6 +442,16 @@ export default function AddClub() {
                 onChange={(e) => setAddress(e.target.value)}
                 className="Club"
                 id="address"
+              />
+            </div>
+            <div className="form-group">
+              <label>Domain</label>
+              <input
+                placeholder="Enter club domain"
+                value={domain}
+                onChange={(e) => setDomain(e.target.value)}
+                className="Club"
+                id="domain"
               />
             </div>
             <div className="form-group">

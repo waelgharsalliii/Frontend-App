@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Footer from '../../components/Footer';
 
 export default function ValidatePayment() {
@@ -11,6 +11,7 @@ export default function ValidatePayment() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
+  const navigate=useNavigate();
 
 
 
@@ -183,6 +184,7 @@ export default function ValidatePayment() {
       );
     if (response.ok) {
         toast.success("Thank you for your payment. Your membership with our club has been processed. Please allow us some time to validate your payment");
+        setTimeout(() => navigate("/MyClubs"), 3000);
     }  
   } 
 

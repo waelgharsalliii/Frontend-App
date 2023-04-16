@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { NavLink } from "react-router-dom";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import Footer from "../../components/Footer";
+import "../../styles/Register.css";
 
 export default function MyEvents() {
   const [user, setUser] = useState(null);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  const [events,setEvents]=useState([]);
-
-
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -21,7 +20,6 @@ export default function MyEvents() {
         setEvents(data);
       });
   }, []);
-
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -175,6 +173,19 @@ export default function MyEvents() {
     </div>
   );
 
+
+
+  const LeaveEventHandler=async (e,event)=> {
+    e.preventDefault();
+    const Id=localStorage.getItem("Id");
+    await fetch(
+      `http://localhost:3001/events/${event._id}/${Id}/leave`,
+      { method: "DELETE" }
+    );
+    toast.success(`You have just left the event ${event.title}`);
+    window.location.reload();
+  }
+
   return (
     <div>
       {NavBarUser}
@@ -185,7 +196,7 @@ export default function MyEvents() {
             {" "}
             {/* add key prop here */}
             <ListGroupItem>
-            <img
+              <img
                 src={process.env.PUBLIC_URL + `/img/${event.img}`}
                 alt={"img"}
                 className="mr-3"
@@ -197,7 +208,18 @@ export default function MyEvents() {
               </div>
               <p className="mb-1">Event Description: {event.description}</p>
               <p className="mb-1">Event Location: {event.location}</p>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div
+                style={{ display: "flex", justifyContent: "flex-end" }}
+              >
+              <button
+                class="btn btn-primary btn-icon-split"
+                onClick={(e) => LeaveEventHandler(e, event)}
+              >
+                <span class="icon text-white-50">
+                  <i class="fas fa-info-circle"></i>
+                </span>
+                <span class="text">Leave Event</span>
+              </button>
               </div>
             </ListGroupItem>
           </ListGroup>

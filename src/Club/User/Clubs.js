@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import Footer from "../../components/Footer";
 import "../../styles/Register.css";
 import Card from "react-bootstrap/Card";
-import { toast, Toaster } from "react-hot-toast";
 
 export default function Clubs() {
   const [clubs, setClubs] = useState([]);
@@ -12,6 +11,8 @@ export default function Clubs() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
+  const [searchField, setSearchField] = useState("");
+  const [searchedClubs, setSearchedClubs] = useState(null);
 
   const FetchClubs = async () => {
     const response = await fetch(`http://localhost:3001/clubs`);
@@ -194,6 +195,17 @@ export default function Clubs() {
     </div>
   );
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    // Filter clubs based on search query
+    const filteredClubs = clubs.filter((club) =>
+      club.domain.toLowerCase().includes(searchField.toLowerCase())
+    );
+    setSearchedClubs(filteredClubs);
+    
+  };
+
   return (
     <div>
       {" "}
@@ -215,15 +227,38 @@ export default function Clubs() {
           style={{ color: "#0056d2", paddingTop: "3px" }}
         ></ion-icon>
       </div>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="welcome-message">
         <h1>
           Welcome to our club community! We're thrilled to have you here. Here's
           a list of the clubs you can explore and join
         </h1>
       </div>
-      {clubs && clubs.length > 0 ? (
-        clubs.map((club) => (
+      <form onSubmit={handleSearch}>
+        <div
+          className="input-group"
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
+          <input
+            type="text"
+            placeholder="Search with Domain"
+            style={{
+              width: "500px",
+              borderRadius: "20px",
+              borderColor: "#009688",
+              borderWidth: "10px",
+            }}
+            value={searchField}
+            onChange={(e) => setSearchField(e.target.value)}
+          />
+          <div className="input-group-append">
+            <button className="btn btn-primary" type="submit">
+              <i className="fas fa-search fa-sm"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+      {searchedClubs && searchedClubs.length > 0   ? (
+        searchedClubs.map((club) => (
           <div className="div1">
             <Card style={{ width: "18rem", marginRight: "10px" }}>
               <Card.Img
@@ -234,6 +269,7 @@ export default function Clubs() {
                 <Card.Title>Club Name: {club.name}</Card.Title>
                 <Card.Text>Club Description: {club.description}</Card.Text>
                 <Card.Text>Club Address: {club.address}</Card.Text>
+                <Card.Text>Club Domain: {club.domain}</Card.Text>
                 <button
                   className="btn btn-secondary btn-icon-split"
                   style={{ marginTop: "5px" }}
@@ -252,6 +288,46 @@ export default function Clubs() {
             </Card>
           </div>
         ))
+      ) : ( searchedClubs && searchedClubs.length === 0 ?
+        (<div className="container-fluid">
+          <div className="text-center" style={{ marginTop: "90px" }}>
+            <div className="error mx-auto" data-text="404">
+              404
+            </div>
+            <p className="lead text-gray-800 mb-5">No Clubs Found</p>
+          </div>
+        </div>
+      ) :
+      (clubs && clubs.length  > 0  ? (
+        clubs.map((club) => (
+          <div className="div1">
+            <Card style={{ width: "18rem", marginRight: "10px" }}>
+              <Card.Img
+                variant="top"
+                src={process.env.PUBLIC_URL + `/img/${club.logo}`}
+              />
+              <Card.Body>
+                <Card.Title>Club Name: {club.name}</Card.Title>
+                <Card.Text>Club Description: {club.description}</Card.Text>
+                <Card.Text>Club Address: {club.address}</Card.Text>
+                <Card.Text>Club Domain: {club.domain}</Card.Text>
+                <button
+                  className="btn btn-secondary btn-icon-split"
+                  style={{ marginTop: "5px" }}
+                  onClick={(e) => PaymentHandler(e, club)}
+                  disabled={user.clubs.includes(club._id) ? true : false}
+                >
+                  <span className="icon text-white-50">
+                    <i className="fas fa-arrow-right"></i>
+                  </span>
+                  <span className="text">
+                    {user.clubs.includes(club._id) ? "Already Joined" : "Join"}
+                  </span>
+                </button>
+              </Card.Body>
+            </Card>
+          </div>
+        ))
       ) : (
         <div className="container-fluid">
           <div className="text-center" style={{ marginTop: "90px" }}>
@@ -259,15 +335,9 @@ export default function Clubs() {
               404
             </div>
             <p className="lead text-gray-800 mb-5">No Clubs Found</p>
-            <p className="text-gray-500 mb-0">
-              It looks like you should get the hell out of here...
-            </p>
-            <NavLink to="/home">
-              <a>&larr; Back to Home</a>
-            </NavLink>
           </div>
         </div>
-      )}
+      )))}
       <Footer />
     </div>
   );
