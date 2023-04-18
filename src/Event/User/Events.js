@@ -36,7 +36,12 @@ export default function Events() {
     fetch(`http://localhost:3001/events`, { method: "GET" })
       .then((response) => response.json())
       .then((data) => {
-        setEvents(data);
+        const eventsWithDates = data.map((event) => ({
+          ...event,
+          start: format(new Date(event.start), "yyyy-MM-dd'T'HH:mm:ss"),
+          end: format(new Date(event.end), "yyyy-MM-dd'T'HH:mm:ss"),
+        }));
+        setEvents(eventsWithDates);
       });
     if (clubs || clubs.length === 0) {
       FetchClubs();
@@ -209,7 +214,7 @@ export default function Events() {
 
   const ViewEventHandler = (e, event) => {
     e.preventDefault();
-    const eventDate = format(new Date(event.date), "yyyy-MM-dd");
+    const eventDate = format(new Date(event.start), "yyyy-MM-dd");
     if (calendarRef.current) {
       const listHeight = cardsRef.current.offsetHeight;
       window.scrollBy(10,listHeight+350);
@@ -260,9 +265,6 @@ export default function Events() {
               />
               <Card.Body>
                 <Card.Title>Event Title: {event.title}</Card.Title>
-                <Card.Text>
-                  Event Date: {format(new Date(event.date), "yyyy-MM-dd")}
-                </Card.Text>
                 <Card.Text>
                   Event Organizer: Club{" "}
                   {clubs.find((club) => club._id === event.organizer).name}

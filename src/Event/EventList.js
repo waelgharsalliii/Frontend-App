@@ -393,7 +393,8 @@ export default function EventList() {
                 <Card.Body>
                   <Card.Title>Event Title: {event.title}</Card.Title>
                   <Card.Text>Event Description: {event.description}</Card.Text>
-                  <Card.Text>Event Date: {format(new Date(event.date), "yyyy-MM-dd")}</Card.Text>
+                  <Card.Text>Event StartDate: {format(new Date(event.start), "yyyy-MM-dd")}</Card.Text>
+                  <Card.Text>Event EndDate: {format(new Date(event.end), "yyyy-MM-dd")}</Card.Text>
                   <Card.Text>Event Location: {event.location}</Card.Text>
                   <Card.Text>Event fee: {event.fee}</Card.Text>
                   <Card.Text>Event NbrPlaces: {event.numPlaces}</Card.Text>

@@ -15,7 +15,8 @@ export default function UpdateEvent() {
   const [profilePic, setProfilePic] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
   const [location, setLocation] = useState("");
   const [fee, setFee] = useState("");
   const [numPlaces,setNumPlaces]=useState("");
@@ -46,7 +47,8 @@ export default function UpdateEvent() {
     if (event) {
       setTitle(event.title);
       setDescription(event.description);
-      setDate(format(new Date(event.date), "yyyy-MM-dd"));
+      setStart(format(new Date(event.start), "yyyy-MM-dd'T'HH:mm:ss"));
+      setEnd(format(new Date(event.end), "yyyy-MM-dd'T'HH:mm:ss"));
       setLocation(event.location);
       setFee(event.fee);
       setNumPlaces(event.numPlaces);
@@ -95,7 +97,8 @@ export default function UpdateEvent() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("location", location);
-    formData.append("date", date);
+    formData.append("start", start);
+    formData.append("end", end);
     formData.append("fee", fee);
     formData.append("numPlaces", numPlaces);
     formData.append("organizer", organizer);
@@ -441,13 +444,23 @@ export default function UpdateEvent() {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label className="EventLabel">Date</Form.Label>
+              <Form.Label className="EventLabel">startDate</Form.Label>
               <Form.Control
-                type="date"
-                placeholder="Enter Event Date"
+                type="datetime-local"
+                placeholder="Enter Event startDate"
                 className="EventControl"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                value={start}
+                onChange={(e) => setStart(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">endDate</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                placeholder="Enter Event endDate"
+                className="EventControl"
+                value={end}
+                onChange={(e) => setEnd(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3">

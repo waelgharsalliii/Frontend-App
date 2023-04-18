@@ -16,7 +16,8 @@ export default function AddEvent() {
   const [clubs, setClubs] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
   const [location, setLocation] = useState("");
   const [fee, setFee] = useState("");
   const [numPlaces,setNumPlaces]=useState("");
@@ -66,7 +67,8 @@ export default function AddEvent() {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("location", location);
-    formData.append("date", date);
+    formData.append("start", start);
+    formData.append("end", end);
     formData.append("fee", fee);
     formData.append("numPlaces", numPlaces);
     formData.append("organizer", organizer);
@@ -397,12 +399,21 @@ export default function AddEvent() {
               onChange={(e) => setDescription(e.target.value)} />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label className="EventLabel">Date</Form.Label>
+              <Form.Label className="EventLabel">startDate</Form.Label>
               <Form.Control
-                type="date"
-                placeholder="Enter Event Date"
+                type="datetime-local"
+                placeholder="Enter Event StartDate"
                 className="EventControl"
-                onChange={(e) => setDate(e.target.value)}
+                onChange={(e) => setStart(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label className="EventLabel">endDate</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                placeholder="Enter Event endDate"
+                className="EventControl"
+                onChange={(e) => setEnd(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3">
