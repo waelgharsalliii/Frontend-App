@@ -7,6 +7,7 @@ import Sidebar from "../AdminDash/Sidebar";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { format } from "date-fns";
+import { useRef } from "react";
 
 export default function UpdateEvent() {
   const [utilisateur, setUtilisateur] = useState([]);
@@ -26,6 +27,24 @@ export default function UpdateEvent() {
   const navigate=useNavigate();
   const EventId=localStorage.getItem("EventId"); 
   const [img,setImg]=useState("");
+
+
+
+  const sidebarRef = useRef(null);
+
+
+  const handleButtonClick = () => {
+    if (sidebarRef.current !== null) {
+      sidebarRef.current.ChangeStyle1();
+    }
+  };
+
+
+
+
+
+
+
 
   const LogoutHandler = () => {
     localStorage.removeItem("Id");
@@ -141,6 +160,7 @@ export default function UpdateEvent() {
           <button
             id="sidebarToggleTop"
             className="btn btn-link d-md-none rounded-circle mr-3"
+            onClick={handleButtonClick}
           >
             <i className="fa fa-bars"></i>
           </button>
@@ -531,7 +551,7 @@ export default function UpdateEvent() {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar />
+        <Sidebar  ref={sidebarRef} />
         {NavBarUser}
       </div>
     </div>

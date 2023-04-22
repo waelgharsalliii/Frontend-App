@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Sidebar from '../AdminDash/Sidebar';
@@ -15,6 +15,24 @@ export default function Attendees() {
   const [profilePic, setProfilePic] = useState("");
   const EventId = localStorage.getItem("EventId");
   const navigate=useNavigate();
+
+
+
+
+
+  const sidebarRef = useRef(null);
+
+
+  const handleButtonClick = () => {
+    if (sidebarRef.current !== null) {
+      sidebarRef.current.ChangeStyle1();
+    }
+  };
+
+
+
+
+
 
     const LogoutHandler = () => {
         localStorage.removeItem("Id");
@@ -90,6 +108,7 @@ export default function Attendees() {
               <button
                 id="sidebarToggleTop"
                 className="btn btn-link d-md-none rounded-circle mr-3"
+                onClick={handleButtonClick}
               >
                 <i className="fa fa-bars"></i>
               </button>
@@ -436,7 +455,7 @@ export default function Attendees() {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar />
+        <Sidebar ref={sidebarRef} />
         {NavBarUser}
       </div>
     </div>

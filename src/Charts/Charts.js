@@ -1,64 +1,60 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import Sidebar from "../AdminDash/Sidebar";
-import styled from "styled-components";
-import "../styles/Register.css";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
-import { toast, Toaster } from "react-hot-toast";
-
-const MainContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-  top: 90px;
-  left: 200px;
-  width: 100%;
-  max-width: 700px;
-  max-height: 500px;
-  overflow-y: scroll;
-  background: #f0e3f0;
-  border-radius: 10px;
-  color: #4b0082;
-  text-transform: uppercase;
-  letter-spacing: 0.4rem;
-  /* Media queries */
-  @media only screen and (max-width: 1123px) {
-    top: 100px;
-    left: 50px;
-    max-width: 90%;
-  }
-  @media only screen and (max-width: 768px) {
-    top: 50px;
-    left: 50px;
-    max-width: 90%;
-  }
-  @media only screen and (max-width: 480px) {
-    top: 20px;
-    left: 20px;
-    right:20px;
-    max-width: 95%;
-    letter-spacing: 0.2rem;
-  }
-`;
+import LineChart from "./LineChart";
+import BarChart from "./BarChart";
+import DonutChart from "./DonutChart";
+import { useRef } from "react";
+import _ from 'lodash';
+import { format } from "date-fns";
 
 
-const WelcomeText = styled.h2`
-  margin: 20px 3rem 20px 20px;
-`;
 
-export default function AddClub() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [address,setAddress]=useState("");
-  const [domain,setDomain]=useState("");
-  const [logo,setLogo]=useState(null);
-  const [utilisateur, setUtilisateur] = useState([]);
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
+
+
+
+
+export default function Charts() {
+  const [admin, setAdmin] = useState(null);
+  const [adminFname, setAdminFname] = useState("");
+  const [adminLname, setAdminLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  const navigate=useNavigate();
+  const [events, setEvents] = useState([]);
+  const [groupedFees, setGroupedFees] = useState([]);
 
+
+
+  const FetchEvents = async () => {
+    const response = await fetch(`http://localhost:3001/events`);
+    const data = await response.json();
+    if (data) {
+      setEvents(data);
+      //*****   Pie   ******* //
+      const fees = data.map(event => event.fee);
+      const feeRanges = [
+        { label: '0DT-50DT', min: 0, max: 50 },
+        { label: '51DT-100DT', min: 51, max: 100 },
+        { label: '101DT-150DT', min: 101, max: 150 },
+        // Add more ranges as needed
+      ];
+      const groupedFees = _.groupBy(fees, fee => {
+        const range = feeRanges.find(range => fee >= range.min && fee <= range.max);
+        return range ? range.label :">150"
+      });
+      
+      setGroupedFees(groupedFees);
+      //*******  Pie  ********//
+    }
+  };
+
+
+  useEffect(()=> {
+    if (!events || events.length === 0) {
+      FetchEvents();
+    }
+  },[])
 
   const sidebarRef = useRef(null);
 
@@ -70,76 +66,95 @@ export default function AddClub() {
   };
 
 
+  const lineChartData = {
+    labels: events.map((event) => format(new Date(event.start), "yyyy-MM-dd'T'HH:mm:ss")),
+    datasets: [
+      {
+        label: 'Number of Attendees',
+        data: events.map((event) => event.attendees.length),
+        fill: false,
+        backgroundColor: 'rgba(75,192,192,0.4)',
+        borderColor: 'rgba(75,192,192,1)',
+      },
+    ],
+  };
 
-  const handleLogoChange = (event) => {
-    setLogo(event.target.files[0]);
+
+  const barChartData = {
+    labels: events.map((event) => event.title),
+    datasets: [
+      {
+        label: 'Available Places',
+        data: events.map((event) => event.numPlaces),
+        backgroundColor: 'rgba(54, 162, 235, 0.5)', // customize bar color if needed
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const DonutData = {
+    labels: Object.keys(groupedFees),
+    datasets: [
+      {
+        data: Object.values(groupedFees).map(arr => arr.length),
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+        ],
+        hoverBackgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+        ],
+      },
+    ],
   };
 
 
 
+  const DonutOptions = {
+    plugins: {
+      title: {
+          display: true,
+          text: 'Fee Ranges'
+      }
+  }
+  };
 
+
+  
+  
+
+  const FetchAdmin = () => {
+    const AdminId = localStorage.getItem("Id");
+    fetch(`http://localhost:3001/users/${AdminId}`, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => {
+        setAdmin(data);
+      });
+  };
 
   const LogoutHandler = () => {
+    localStorage.removeItem("Ident");
     localStorage.removeItem("Id");
   };
 
-
-  const AddClubHandler = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("address", address);
-    formData.append("domain", domain);
-    if (logo) {
-      formData.append("logo", logo, logo.name);
-    }
-  
-    try {
-      const response = await fetch(`http://localhost:3001/clubs/add`, {
-        method: "POST",
-        body: formData,
-      });
-  
-  
-      if (!response.ok) {
-        throw new Error("Failed to add club");
-      }
-      toast.success("Club Added");
-      setTimeout(() => navigate("/Clubs"), 2000);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add club");
-    }
-  };
-  
-  
-
   useEffect(() => {
-    const Id = localStorage.getItem("Id");
-    fetch(`http://localhost:3001/users/${Id}`, { method: "GET" })
-      .then((response) => response.json())
-      .then((data) => {
-        setUtilisateur(data);
-      });
+    FetchAdmin();
   }, []);
 
   useEffect(() => {
-    if (utilisateur) {
-      setFname(utilisateur.fname);
-      setLname(utilisateur.lname);
-      setProfilePic(utilisateur.profilePic);
+    if (admin) {
+      setAdminFname(admin.fname);
+      setAdminLname(admin.lname);
+      setProfilePic(admin.profilePic);
     }
-  }, [utilisateur]);
-
-
-  
-
-  
+  }, [admin]);
 
   const NavBarUser = (
     <div id="content-wrapper" className="d-flex flex-column">
-      <Toaster position="top-center" reverseOrder={false} />
       <div id="content">
         <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
           <button
@@ -386,7 +401,7 @@ export default function AddClub() {
                 aria-expanded="false"
               >
                 <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                  {fname} {lname}
+                  {adminFname} {adminLname}
                 </span>
                 <img
                   className="img-profile rounded-circle"
@@ -425,66 +440,54 @@ export default function AddClub() {
             </li>
           </ul>
         </nav>
-        <MainContainer>
-          <WelcomeText>add a club</WelcomeText>
-          <form onSubmit={AddClubHandler}>
-            <div className="form-group">
-              <label>Name </label>
-              <input
-                type="text"
-                placeholder="Enter club name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="Club"
-                id="name"
-              />
+        <br />
+        <br />
+        <br />
+        <div className="row">
+          <div className="col-xl-8 col-lg-7">
+            <div className="card shadow mb-4">
+              <div className="card-header py-3">
+                <h6 className="m-0 font-weight-bold text-primary">
+                  Area Chart
+                </h6>
+              </div>
+              <div className="card-body">
+                <div className="chart-area">
+                  <LineChart data={lineChartData} />
+                </div>
+                <hr />
+              </div>
             </div>
-            <div className="form-group">
-              <label>Description </label>
-              <textarea
-                placeholder="Enter club description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                id="description"
-              />
+
+            <div className="card shadow mb-4">
+              <div className="card-header py-3">
+                <h6 className="m-0 font-weight-bold text-primary">Bar Chart</h6>
+              </div>
+              <div className="card-body">
+                <div className="chart-bar">
+                  <BarChart data={barChartData}  />
+                </div>
+                <hr />
+              </div>
             </div>
-            <div className="form-group">
-              <label>Address</label>
-              <input
-                placeholder="Enter club address"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                className="Club"
-                id="address"
-              />
+          </div>
+
+          <div className="col-xl-4 col-lg-5">
+            <div className="card shadow mb-4">
+              <div className="card-header py-3">
+                <h6 className="m-0 font-weight-bold text-primary">
+                  Donut Chart
+                </h6>
+              </div>
+              <div className="card-body">
+                <div className="chart-pie pt-4">
+                  <DonutChart data={DonutData} options={DonutOptions} />
+                </div>
+                <hr />
+              </div>
             </div>
-            <div className="form-group">
-              <label>Domain</label>
-              <input
-                placeholder="Enter club domain"
-                value={domain}
-                onChange={(e) => setDomain(e.target.value)}
-                className="Club"
-                id="domain"
-              />
-            </div>
-            <div className="form-group">
-              <label>Logo</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleLogoChange}
-                id="logo"
-              />
-            </div>
-            <button  className="btn btn-success btn-icon-split" type="submit">
-              <span className="icon text-white-50">
-                <i className="fas fa-check"></i>
-              </span>
-              <span className="text">Add</span>
-            </button>
-          </form>
-        </MainContainer>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -492,7 +495,7 @@ export default function AddClub() {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar  ref={sidebarRef} />
+        <Sidebar ref={sidebarRef} />
         {NavBarUser}
       </div>
     </div>

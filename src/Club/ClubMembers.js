@@ -5,6 +5,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Sidebar from '../AdminDash/Sidebar';
 import { format } from "date-fns";
+import { useRef } from 'react';
 
 export default function ClubMembers() {
 
@@ -15,6 +16,17 @@ export default function ClubMembers() {
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const navigate=useNavigate();
+
+
+
+  const sidebarRef = useRef(null);
+
+
+  const handleButtonClick = () => {
+    if (sidebarRef.current !== null) {
+      sidebarRef.current.ChangeStyle1();
+    }
+  };
 
     const LogoutHandler = () => {
         localStorage.removeItem("Id");
@@ -90,6 +102,7 @@ export default function ClubMembers() {
             <button
               id="sidebarToggleTop"
               className="btn btn-link d-md-none rounded-circle mr-3"
+              onClick={handleButtonClick}
             >
               <i className="fa fa-bars"></i>
             </button>
@@ -473,7 +486,7 @@ export default function ClubMembers() {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar></Sidebar>
+        <Sidebar ref={sidebarRef} />
         {NavBarUser}
       </div>
     </div>

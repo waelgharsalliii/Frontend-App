@@ -1,13 +1,44 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { NavLink } from 'react-router-dom';
 import "../styles/Register.css";
+import { useState } from 'react';
 
 
 
-export default function Sidebar() {
+const Sidebar=forwardRef((props, ref) => {
+
+
+    const [style,setStyle]=useState("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion");
+
+
+    const ChangeStyle=()=> {
+    if (style=="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion") {
+        setStyle("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled");
+    }
+    else {
+        setStyle("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion");
+    }
+    }
+
+
+    const ChangeStyle1=()=> {
+        if (style=="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion") {
+            setStyle("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled1");
+        }
+        else {
+            setStyle("navbar-nav bg-gradient-primary sidebar sidebar-dark accordion");
+        }
+        }
+
+    useImperativeHandle(ref, () => ({
+        ChangeStyle1
+      }));
+
+
+
   return (
     <div className='SideBar'>
-        <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul className={style} id="accordionSidebar">
 
             <a className="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
                 <div className="sidebar-brand-icon rotate-n-15">
@@ -63,7 +94,7 @@ export default function Sidebar() {
                     aria-controls="collapseTwo">
                     <i className="fas fa-fw fa-table"></i>
                     <span>Events</span></a>
-                    <div id="collapseTwo" className="collapse show" aria-labelledby="headingTwo"
+                    <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo"
                     data-parent="#accordionSidebar">
                     <div className="bg-white py-2 collapse-inner rounded">
                         <h6 className="collapse-header">Custom Events:</h6>
@@ -73,10 +104,24 @@ export default function Sidebar() {
                 </div>
             </li>
 
+            <li className="nav-item">
+                <NavLink className="nav-link" to="/Charts">
+                    <i className="fas fa-fw fa-chart-area"></i>
+                    <span>Charts</span></NavLink>
+            </li>
+
             
             <hr className="sidebar-divider d-none d-md-block" />
+
+            <div className="text-center d-none d-md-inline">
+                <button className="rounded-circle border-0" id="sidebarToggle"onClick={ChangeStyle} ></button>
+            </div>
 
         </ul>
         </div>
   )
-}
+});
+
+
+export default Sidebar;
+

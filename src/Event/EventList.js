@@ -7,6 +7,7 @@ import Sidebar from "../AdminDash/Sidebar";
 import Card from "react-bootstrap/Card";
 import { format } from "date-fns";
 import { Button } from "react-bootstrap";
+import { useRef } from "react";
 
 export default function EventList() {
   const [utilisateur, setUtilisateur] = useState([]);
@@ -16,6 +17,17 @@ export default function EventList() {
   const [events, setEvents] = useState([]);
   const [clubs,setClubs]=useState([]);
   const navigate=useNavigate();
+
+
+
+  const sidebarRef = useRef(null);
+
+
+  const handleButtonClick = () => {
+    if (sidebarRef.current !== null) {
+      sidebarRef.current.ChangeStyle1();
+    }
+  };
 
   const LogoutHandler = () => {
     localStorage.removeItem("Id");
@@ -102,6 +114,7 @@ export default function EventList() {
           <button
             id="sidebarToggleTop"
             className="btn btn-link d-md-none rounded-circle mr-3"
+            onClick={handleButtonClick}
           >
             <i className="fa fa-bars"></i>
           </button>
@@ -439,7 +452,7 @@ export default function EventList() {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar />
+        <Sidebar ref={sidebarRef} />
         {NavBarUser}
       </div>
     </div>

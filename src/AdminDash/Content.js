@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 
 
-export default function Content() {
+export default function Content(props) {
 
 
   const [user, setUser] = useState(null);
@@ -39,6 +39,7 @@ export default function Content() {
 
 
 
+
   return (
     <div id="content-wrapper" className="d-flex flex-column">
         <div id="content">
@@ -46,6 +47,7 @@ export default function Content() {
         <button
           id="sidebarToggleTop"
           className="btn btn-link d-md-none rounded-circle mr-3"
+          onClick={props.onButtonClick}
         >
           <i className="fa fa-bars"></i>
         </button>

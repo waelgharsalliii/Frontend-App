@@ -5,6 +5,7 @@ import "../styles/Register.css";
 import { toast, Toaster } from "react-hot-toast";
 import ReactPaginate from "react-paginate";
 import { format } from "date-fns";
+import { useRef } from "react";
 
 const Users = () => {
   const [data, setData] = useState([]);
@@ -17,6 +18,19 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const offset = (currentPage - 1) * itemsPerPage;
   const currentPageData = data.slice(offset, offset + itemsPerPage);
+
+
+
+  const sidebarRef = useRef(null);
+
+
+  const handleButtonClick = () => {
+    if (sidebarRef.current !== null) {
+      sidebarRef.current.ChangeStyle1();
+    }
+  };
+
+
 
   const fetchData = async () => {
     const response = await fetch(`http://localhost:3001/users`);
@@ -93,6 +107,7 @@ const Users = () => {
           <button
             id="sidebarToggleTop"
             className="btn btn-link d-md-none rounded-circle mr-3"
+            onClick={handleButtonClick}
           >
             <i className="fa fa-bars"></i>
           </button>
@@ -465,7 +480,7 @@ const Users = () => {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar></Sidebar>
+        <Sidebar ref={sidebarRef}  />
         {NavBarUser}
       </div>
     </div>

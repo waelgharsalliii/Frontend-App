@@ -27,6 +27,7 @@ import Attendees from "./Event/Attendees";
 import Events from "./Event/User/Events";
 import MyEvents from "./Event/User/MyEvents";
 import EventDetails from "./Event/User/EventDetails";
+import Charts from "./Charts/Charts";
 
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
             <Route path="/Attendees" element={<Attendees />} />
             <Route path="/EventsList" element={<Events />} /> 
             <Route path="/MyEvents" element={<MyEvents />} />
+           <Route path="/Charts" element={<Charts />} /> 
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
           {/* <About/> */}

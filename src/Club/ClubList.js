@@ -6,6 +6,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { NavLink, useNavigate } from "react-router-dom";
 import Sidebar from "../AdminDash/Sidebar";
 import "../styles/Register.css";
+import { useRef } from "react";
 
 export default function ClubList() {
   const [clubs, setClubs] = useState([]);
@@ -14,6 +15,24 @@ export default function ClubList() {
   const [lname, setLname] = useState("");
   const [profilePic, setProfilePic] = useState("");
   const navigate = useNavigate();
+
+
+
+
+
+  const sidebarRef = useRef(null);
+
+
+  const handleButtonClick = () => {
+    if (sidebarRef.current !== null) {
+      sidebarRef.current.ChangeStyle1();
+    }
+  };
+
+
+
+
+
 
   const FetchClubs = async () => {
     const response = await fetch(`http://localhost:3001/clubs`);
@@ -81,6 +100,7 @@ export default function ClubList() {
           <button
             id="sidebarToggleTop"
             className="btn btn-link d-md-none rounded-circle mr-3"
+            onClick={handleButtonClick}
           >
             <i className="fa fa-bars"></i>
           </button>
@@ -419,7 +439,7 @@ export default function ClubList() {
   return (
     <div id="page-top">
       <div id="wrapper">
-        <Sidebar></Sidebar>
+        <Sidebar ref={sidebarRef} />
         {NavBarUser}
       </div>
     </div>

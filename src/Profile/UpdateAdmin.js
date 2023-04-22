@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import { NavLink } from "react-router-dom";
 import "../styles/Register.css";
@@ -15,6 +15,18 @@ export default function UpdateAdmin() {
   const [adminFname,setAdminFname]=useState("");
   const [adminLname,setAdminLname]=useState("");
   const [profilePic,setProfilePic]=useState("");
+
+
+
+
+  const sidebarRef = useRef(null);
+
+
+  const handleButtonClick = () => {
+    if (sidebarRef.current !== null) {
+      sidebarRef.current.ChangeStyle1();
+    }
+  };
 
 
 
@@ -113,6 +125,7 @@ export default function UpdateAdmin() {
   <button
     id="sidebarToggleTop"
     className="btn btn-link d-md-none rounded-circle mr-3"
+    onClick={handleButtonClick}
   >
     <i className="fa fa-bars"></i>
   </button>
@@ -444,7 +457,7 @@ export default function UpdateAdmin() {
   return (
     <div id="page-top">
       <div id="wrapper">
-      <Sidebar />
+      <Sidebar ref={sidebarRef} />
       {NavBarUser}
       </div>
     </div>
