@@ -28,7 +28,7 @@ import Events from "./Event/User/Events";
 import MyEvents from "./Event/User/MyEvents";
 import EventDetails from "./Event/User/EventDetails";
 import Charts from "./Charts/Charts";
-
+import Chatbot from "./chatbot";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -42,7 +42,7 @@ function App() {
   return (
     <div className="container-xxl bg-white p-0">
       {loaded ? (
-        <>
+        <> <Chatbot/>
           <Routes>
             <Route exact path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<Home />} />
