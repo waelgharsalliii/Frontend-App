@@ -192,15 +192,22 @@ export default function EventDetails() {
   );
 
 
-  const JoinHandler = async (e) => {
+  const JoinHandler = async (e,event) => {
     e.preventDefault();
+    const Id = localStorage.getItem("Id");
     try {
-      const response = await fetch(`http://localhost:3001/events/${event._id}/join/${Id}`, {
-        method: "POST",
-      });
+      const response = await fetch(
+        `http://localhost:3001/payevent/${event._id}/${Id}/payment`,
+        { method: "POST" }
+      );
+      const data = await response.json();
+      const paymentId = data.result.link.substring(
+        data.result.link.lastIndexOf("/") + 1
+      );
+      localStorage.setItem("paymentId", paymentId);
+      localStorage.setItem("eventId", event._id);
       if (response.ok) {
-        toast.success(`You have just joined the event ${event.title}`);
-        setTimeout(() => navigate("/MyEvents"), 3000);
+        window.location.href = data.result.link;
       } else {
         const errorResponse = await response.json();
         toast.error(errorResponse.message);
@@ -248,7 +255,7 @@ export default function EventDetails() {
               </CardBody>
 
               <CardFooter>
-                <Button variant="solid" colorScheme="blue" onClick={JoinHandler}
+                <Button variant="solid" colorScheme="blue" onClick={(e)=>JoinHandler(e,event)}
                 disabled={
                   true}
                 >

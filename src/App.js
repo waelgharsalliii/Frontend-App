@@ -67,6 +67,7 @@ function App() {
             <Route  path="/AddEvent" element={<AddEvent />} />
             <Route path="/Events" element={<EventList />} />
             <Route path="/EventDetails" element={<EventDetails />} />
+            <Route path="/ValidateEvtPayment" element={<QrCode />} />
             <Route  path="/UpdateEvent" element={<UpdateEvent />} />
             <Route path="/Attendees" element={<Attendees />} />
             <Route path="/EventsList" element={<Events />} /> 

@@ -23,6 +23,17 @@ export default function Charts() {
   const [profilePic, setProfilePic] = useState("");
   const [events, setEvents] = useState([]);
   const [groupedFees, setGroupedFees] = useState([]);
+  const [clubs, setClubs] = useState([]);
+
+
+
+  const FetchClubs = async () => {
+    const response = await fetch(`http://localhost:3001/clubs`);
+    const data = await response.json();
+    if (data) {
+      setClubs(data);
+    }
+  };
 
 
 
@@ -54,6 +65,9 @@ export default function Charts() {
     if (!events || events.length === 0) {
       FetchEvents();
     }
+    if (!clubs || clubs.length === 0) {
+      FetchClubs();
+    }
   },[])
 
   const sidebarRef = useRef(null);
@@ -80,18 +94,24 @@ export default function Charts() {
   };
 
 
+  const clubNames = clubs.map((club) => club.name);
+
   const barChartData = {
-    labels: events.map((event) => event.title),
+    labels: clubNames,
     datasets: [
       {
-        label: 'Available Places',
-        data: events.map((event) => event.numPlaces),
-        backgroundColor: 'rgba(54, 162, 235, 0.5)', // customize bar color if needed
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1,
+        label: 'Likes',
+        backgroundColor: '#3e95cd',
+        data: clubs.map((club) => club.likeCount),
+      },
+      {
+        label: 'Dislikes',
+        backgroundColor: '#8e5ea2',
+        data: clubs.map((club) => club.dislikeCount),
       },
     ],
   };
+  
 
   const DonutData = {
     labels: Object.keys(groupedFees),

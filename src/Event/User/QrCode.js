@@ -3,60 +3,47 @@ import { QRCodeCanvas } from "qrcode.react";
 import { AiFillCopy, AiOutlineDownload } from "react-icons/ai";
 import React, { useEffect, useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast';
-import { NavLink, useNavigate } from 'react-router-dom';
-import Footer from '../../components/Footer';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function QrCode() {
-    const [user, setUser] = useState(null);
-  const [fname, setFname] = useState("");
-  const [lname, setLname] = useState("");
-  const [profilePic, setProfilePic] = useState("");
   const navigate=useNavigate();
+  const paymentId=localStorage.getItem("paymentId");
 
   
+  useEffect(()=> {
+    seturl(paymentId);
+  },[])
   
 
 
   const ValidatePaymentHandler=async (e)=> {
     e.preventDefault();
-    const paymentId=localStorage.getItem("paymentId");
     const Id=localStorage.getItem("Id");
-    const ClubId=localStorage.getItem("ClubId");
+    const EventId=localStorage.getItem("eventId");
     const response = await fetch(
-        `http://localhost:3001/api/${ClubId}/${Id}/payment/${paymentId}`,
+        `http://localhost:3001/payevent/${EventId}/${Id}/payment/${paymentId}`,
         { method: "POST" }
       );
     if (response.ok) {
         toast.success("Thank you for your payment.");
-        setTimeout(() => navigate("/MyClubs"), 3000);
+        setTimeout(() => navigate("/MyEvents"), 3000);
     }  
   } 
 
-  useEffect(() => {
-    const Id = localStorage.getItem("Id");
-    fetch(`http://localhost:3001/users/${Id}`, { method: "GET" })
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data);
-      });
-  }, []);
+  
 
-  useEffect(() => {
-    if (user) {
-      setFname(user.fname);
-      setLname(user.lname);
-      setProfilePic(user.profilePic);
-    }
-  }, [user]);
 
 
   const LogoutHandler = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("Id");
-    localStorage.removeItem("ClubId");
+    localStorage.removeItem("eventId");
     localStorage.removeItem("paymentId");
   };
+
+
   const [qr, setqr] = useState("");
   const [url, seturl] = useState("");
   const QrCodeDownload = async () => {
@@ -97,14 +84,7 @@ export default function QrCode() {
       <div class="mb-4">
         <p className="text-2xl">Generate QrCode For The Event</p>
       </div>
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm  mb-1">Write your name in your ticket</label>
-        <input
-          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          onChange={(e) => seturl(e.target.value)}
-        />
-      </div>
+
 
       <div id="canvas" className="border relative">
         <QRCodeCanvas
