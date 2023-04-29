@@ -29,6 +29,7 @@ import MyEvents from "./Event/User/MyEvents";
 import EventDetails from "./Event/User/EventDetails";
 import Charts from "./Charts/Charts";
 import Chatbot from "./chatbot";
+import QrCode from "./Event/User/QrCode";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -43,6 +44,7 @@ function App() {
     <div className="container-xxl bg-white p-0">
       {loaded ? (
         <> <Chatbot/>
+        
           <Routes>
             <Route exact path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<Home />} />
@@ -60,6 +62,7 @@ function App() {
             <Route  path="/ClubMembers" element={<ClubMembers />} />
             <Route  path="/payment" element={<Clubs />} />
             <Route path="/ValidatePayment" element={<ValidatePayment />} />
+            <Route path="/ValidateEvent" element={<QrCode />} />
             <Route path="/MyClubs" element={<MyClubs />} />
             <Route  path="/AddEvent" element={<AddEvent />} />
             <Route path="/Events" element={<EventList />} />
