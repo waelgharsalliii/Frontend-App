@@ -12,6 +12,27 @@ export default function MyClubs() {
   const [profilePic, setProfilePic] = useState("");
   const [clubs, setClubs] = useState([]);
   const [clubIds,setClubIds]=useState([]);
+  const Id=localStorage.getItem("Id");
+  const [chats,setChats]=useState([]);
+
+
+
+  const FetchChats=async ()=> {
+    const response=await fetch(
+      `http://localhost:3001/chat`,
+      { method: "GET" }
+    );
+    const data=await response.json();
+    setChats(data);
+  }
+
+
+  useEffect(()=> {
+    if (!chats || chats.length==0) {
+      FetchChats();
+    }
+  },[])
+
 
   useEffect(() => {
     const Id = localStorage.getItem("Id");
@@ -51,13 +72,22 @@ export default function MyClubs() {
 
   const LeaveClubHandler=async (e,club)=> {
     e.preventDefault();
-    const Id=localStorage.getItem("Id");
     await fetch(
       `http://localhost:3001/clubs/${club._id}/${Id}/leave`,
       { method: "DELETE" }
     );
     toast.success(`You have just left the club ${club.name}`);
     window.location.reload();
+  }
+
+
+  const JoinChatroomHandler=async (e,club)=> {
+    e.preventDefault();
+    await fetch(
+      `http://localhost:3001/chat/addtogroup/${Id}/${club._id}`,
+      { method: "PUT" }
+    );
+    toast.success(`You have just joined the chatroom of the club ${club.name}`);
   }
 
   const NavBarUser = (
@@ -193,7 +223,7 @@ export default function MyClubs() {
     <div>
       {NavBarUser}
       <Toaster position="top-center" reverseOrder={false} />
-      {clubs && clubs.length > 0 ? (
+      {clubs && clubs.length > 0 && chats && chats.length>0 ? (
         clubs.map((club) => (
           <ListGroup key={club._id}>
             {" "}
@@ -213,13 +243,25 @@ export default function MyClubs() {
               <p className="mb-1">Club Address: {club.address}</p>
               <div style={{ display: "flex",justifyContent:"flex-end" }}>
         <button
-          class="btn btn-primary btn-icon-split"
+          className="btn btn-primary btn-icon-split"
+          style={{position:"relative",left:"200px"}}
           onClick={(e) => LeaveClubHandler(e, club)}
         >
-          <span class="icon text-white-50">
-            <i class="fas fa-info-circle"></i>
+          <span className="icon text-white-50">
+            <i className="fas fa-info-circle"></i>
           </span>
-          <span class="text">Leave Club</span>
+          <span className="text">Leave Club</span>
+        </button>
+        <button
+          className="btn btn-info btn-icon-split"
+          style={{position:"relative",bottom:"60px"}}
+          onClick={(e) => JoinChatroomHandler(e, club)}
+          disabled={chats.filter(chat=>(chat.organizer===club._id))[0].users.includes(Id)}
+        >
+          <span className="icon text-white-50">
+            <i className="fas fa-info-circle"></i>
+          </span>
+          <span className="text">{chats.filter(chat=>(chat.organizer===club._id))[0].users.includes(Id) ? "Already Joined" : "Join Chatroom"}</span>
         </button>
       </div>
             </ListGroupItem>

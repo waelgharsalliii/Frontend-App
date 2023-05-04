@@ -403,6 +403,26 @@ export default function Clubs() {
                     {user.clubs.includes(club._id) ? "Already Joined" : "Join"}
                   </span>
                 </button>
+                <button
+                  className="btn btn-outline-success btn-icon-split mr-2"
+                  style={{ marginTop: "5px", marginLeft: "10px" }}
+                  onClick={(e) => handleLike(e, club)}
+                >
+                  <span className="icon text-success">
+                    <i className="fas fa-thumbs-up"></i>
+                  </span>
+                  <span className="like-count text"> Like ({club.likeCount})</span>
+                </button>
+                <button
+                  className="btn btn-outline-danger btn-icon-split"
+                  style={{ marginTop: "5px" }}
+                  onClick={(e) => handleDislike(e, club)}
+                >
+                  <span className="icon text-danger">
+                    <i className="fas fa-thumbs-down"></i>
+                  </span>
+                  <span className="text"> Dislike ({club.dislikeCount})</span>
+                </button>
               </Card.Body>
             </Card>
           </div>

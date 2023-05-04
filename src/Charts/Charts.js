@@ -24,8 +24,26 @@ export default function Charts() {
   const [events, setEvents] = useState([]);
   const [groupedFees, setGroupedFees] = useState([]);
   const [clubs, setClubs] = useState([]);
+  const [users,setUsers]=useState([]);
+  const [providerCounts,setProviderCounts]=useState([]);
 
 
+
+
+  const FetchUsers = async () => {
+    const response = await fetch(`http://localhost:3001/users`);
+    const data = await response.json();
+    if (data) {
+      setUsers(data);
+      const providers = data.map(user => user.provider);
+      const groupedProviders = _.groupBy(providers, provider => {
+        return provider === "Facebook" ? "Facebook" : provider === "Google" ? "Google" : "none";
+      });
+      
+
+      setProviderCounts(groupedProviders);
+    }
+  };
 
   const FetchClubs = async () => {
     const response = await fetch(`http://localhost:3001/clubs`);
@@ -36,19 +54,16 @@ export default function Charts() {
   };
 
 
-
   const FetchEvents = async () => {
     const response = await fetch(`http://localhost:3001/events`);
     const data = await response.json();
     if (data) {
       setEvents(data);
-      //*****   Pie   ******* //
       const fees = data.map(event => event.fee);
       const feeRanges = [
         { label: '0DT-50DT', min: 0, max: 50 },
         { label: '51DT-100DT', min: 51, max: 100 },
         { label: '101DT-150DT', min: 101, max: 150 },
-        // Add more ranges as needed
       ];
       const groupedFees = _.groupBy(fees, fee => {
         const range = feeRanges.find(range => fee >= range.min && fee <= range.max);
@@ -56,7 +71,6 @@ export default function Charts() {
       });
       
       setGroupedFees(groupedFees);
-      //*******  Pie  ********//
     }
   };
 
@@ -67,6 +81,9 @@ export default function Charts() {
     }
     if (!clubs || clubs.length === 0) {
       FetchClubs();
+    }
+    if (!users || users.length===0) {
+      FetchUsers();
     }
   },[])
 
@@ -111,6 +128,51 @@ export default function Charts() {
       },
     ],
   };
+
+
+  const barChartDataClubs={
+    labels: clubNames,
+    datasets: [
+      {
+        label: 'Members Count',
+        backgroundColor: '#3e95cd',
+        data: clubs.map((club) => club.members.length),
+      },
+    ],
+  };
+
+
+
+  const DonutDataProvider={
+    labels: Object.keys(providerCounts),
+    datasets: [
+      {
+        data: Object.values(providerCounts).map(arr => arr.length),
+        backgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+        ],
+        hoverBackgroundColor: [
+          '#FF6384',
+          '#36A2EB',
+          '#FFCE56',
+        ],
+      },
+    ],
+  };
+
+
+  const DonutOptionsProvider = {
+    plugins: {
+      title: {
+          display: true,
+          text: 'Provider'
+      }
+  }
+  };
+
+
   
 
   const DonutData = {
@@ -502,6 +564,33 @@ export default function Charts() {
               <div className="card-body">
                 <div className="chart-pie pt-4">
                   <DonutChart data={DonutData} options={DonutOptions} />
+                </div>
+                <hr />
+              </div>
+            </div>
+          </div>
+
+          <div className="card shadow mb-4">
+              <div className="card-header py-3">
+                <h6 className="m-0 font-weight-bold text-primary">Bar Chart</h6>
+              </div>
+              <div className="card-body">
+                <div className="chart-bar">
+                  <BarChart data={barChartDataClubs}  />
+                </div>
+                <hr />
+              </div>
+            </div>
+          <div className="col-xl-4 col-lg-5">
+            <div className="card shadow mb-4">
+              <div className="card-header py-3">
+                <h6 className="m-0 font-weight-bold text-primary">
+                  Donut Chart
+                </h6>
+              </div>
+              <div className="card-body">
+                <div className="chart-pie pt-4">
+                  <DonutChart data={DonutDataProvider} options={DonutOptionsProvider} />
                 </div>
                 <hr />
               </div>

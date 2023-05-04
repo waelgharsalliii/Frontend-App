@@ -1,7 +1,7 @@
 import html2canvas from "html2canvas";
 import { QRCodeCanvas } from "qrcode.react";
 import { AiFillCopy, AiOutlineDownload } from "react-icons/ai";
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,10 +10,6 @@ export default function QrCode() {
   const navigate=useNavigate();
   const paymentId=localStorage.getItem("paymentId");
 
-  
-  useEffect(()=> {
-    seturl(paymentId);
-  },[])
   
 
 
@@ -65,13 +61,20 @@ export default function QrCode() {
   const QrCodeCopy = () => {
     navigator.clipboard.writeText(qr);
   };
+
+
+  const GenerateQrCodeHandler=()=> {
+    seturl(paymentId);
+  }
+
+
   return (
     <div>
       
     <Toaster position="top-center" reverseOrder={false} />
     <div className="welcome-message" >
       <h4>
-        Write Your name to generate your QR Code then click validate to join the event.
+      Click the button to generate your QR Code then click validate to join the event
       </h4>
       <h4>
         Be sure to save your code!
@@ -83,9 +86,8 @@ export default function QrCode() {
     <div className="container mx-auto w-[320px]" >
       <div class="mb-4">
         <p className="text-2xl">Generate QrCode For The Event</p>
+        <button className="btn btn-primary" onClick={GenerateQrCodeHandler}>Generate QrCode</button>
       </div>
-
-
       <div id="canvas" className="border relative">
         <QRCodeCanvas
           value={url}
