@@ -460,12 +460,73 @@ margin-bottom: 10px;
 }
 
 
+/*Chatroom*/
+
+.chatroom-container {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 600px;
+  height: 500px;
+}
+
+.chatroom-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.chatroom-messages {
+  overflow-y: scroll;
+  height: 350px;
+  margin-bottom: 20px;
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+.username {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.chatroom-input {
+  display: flex;
+}
+
+.chatroom-input input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.chatroom-input button {
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.chatroom-input button:hover {
+  background-color: #0062cc;
+}
 
 
 
 
+/*Chatroom*/
 
 
 
-
-
+div.empty-message {
+  color: gray;
+  font-size: 1.2em;
+  padding: 10px;
+  text-align: center;
+}

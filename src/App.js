@@ -30,6 +30,7 @@ import EventDetails from "./Event/User/EventDetails";
 import Charts from "./Charts/Charts";
 import Chatbot from "./chatbot";
 import QrCode from "./Event/User/QrCode";
+import Chatroom from "./Club/User/Chatroom";
 
 function App() {
   const [loaded, setLoaded] = useState(false);
@@ -73,6 +74,7 @@ function App() {
             <Route path="/EventsList" element={<Events />} /> 
             <Route path="/MyEvents" element={<MyEvents />} />
            <Route path="/Charts" element={<Charts />} /> 
+           <Route path="/Chatroom" element={<Chatroom />} />
             <Route path="*" element={<NotFound />}></Route>
           </Routes>
           {/* <About/> */}
