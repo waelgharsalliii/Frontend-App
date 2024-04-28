@@ -5,8 +5,8 @@ pipeline {
         stage('Checkout Git') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']],
-                userRemoteConfigs: [[url: 'git@github.com:waelgharsalliii/Frontend_App.git']]])                
+                userRemoteConfigs: [[url: 'https://github.com/waelgharsalliii/Frontend_App.git']]])                
             }
         }
     }
- }
+}
