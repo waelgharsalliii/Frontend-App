@@ -7,6 +7,24 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'jenkins-front-ssh', url: 'git@github.com:waelgharsalliii/Frontend-App.git']])
             }
         }
+        stage('Install dependencies') {
+            steps {
+                // Install Node.js dependencies
+                sh 'npm install'
+            }
+        }
+        stage('Run unit tests') {
+            steps {
+                // Run Jest tests
+                sh 'npm test'
+            }
+        }
+        stage('Run E2E tests') {
+            steps {
+                // Run Cypress tests
+                sh 'npm run cy:run'
+            }
+        }
     }
 }
 
