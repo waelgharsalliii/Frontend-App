@@ -18,6 +18,8 @@ pipeline {
                 // Run Jest tests
                 sh 'npm test'
    
+             }
+        }
     }
 }
 
