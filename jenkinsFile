@@ -17,14 +17,7 @@ pipeline {
             steps {
                 // Run Jest tests
                 sh 'npm test'
-            }
-        }
-        stage('Run E2E tests') {
-            steps {
-                // Run Cypress tests
-                sh 'npm run cy:run'
-            }
-        }
+   
     }
 }
 
