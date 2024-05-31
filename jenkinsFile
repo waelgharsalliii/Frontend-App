@@ -29,7 +29,7 @@ pipeline {
                       stage('publish') {
             steps {                     
                 // Publish package to Nexus repository
-                     withCredentials([file(credentialsId: 'nexus-cred', variable: 'mynpmrc')]) {
+                     withCredentials([file(credentialsId: 'nexus-front-cred', variable: 'mynpmrc')]) {
 
                          sh "npm publish --userconfig $mynpmrc --loglevel verbose"
                      }}}
